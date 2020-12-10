@@ -1,10 +1,10 @@
 import unittest
-from imp_lexer import *
-from imp_parser import *
+from rig_lexer import *
+from rig_parser import *
 
-class TestImpParser(unittest.TestCase):
+class TestRigParser(unittest.TestCase):
     def parser_test(self, code, parser, expected):
-        tokens = imp_lex(code)
+        tokens = rig_lex(code)
         result = parser(tokens, 0)
         self.assertNotEquals(None, result)
         self.assertEquals(expected, result.value)
@@ -32,7 +32,7 @@ class TestImpParser(unittest.TestCase):
     def test_aexp_binop(self):
         code = '2 * 3 + 4'
         expected = BinopAexp('+', BinopAexp('*', IntAexp(2), IntAexp(3)), IntAexp(4))
-        self.parser_test('2 * 3 + 4', aexp(), expected)
+        self.parser_test(code, aexp(), expected)
 
     def test_aexp_binop_group(self):
         code = '2 * (3 + 4)'

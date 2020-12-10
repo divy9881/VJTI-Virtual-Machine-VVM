@@ -1,5 +1,5 @@
 import sys
-from imp_parser import *
+from rig_parser import *
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
@@ -9,7 +9,7 @@ if __name__ == '__main__':
     file = open(filename)
     characters = file.read()
     file.close()
-    tokens = imp_lex(characters)
+    tokens = rig_lex(characters)
     parser = globals()[sys.argv[2]]()
     result = parser(tokens, 0)
     print(result)

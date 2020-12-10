@@ -1,11 +1,11 @@
 import unittest
-from imp_lexer import *
-from imp_parser import *
+from rig_lexer import *
+from rig_parser import *
 
 class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):
-        tokens = imp_lex(code)
-        result = imp_parse(tokens)
+        tokens = rig_lex(code)
+        result = rig_parse(tokens)
         self.assertNotEquals(None, result)
         program = result.value
         env = {}

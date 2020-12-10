@@ -34,5 +34,5 @@ token_exprs = [
     (r'[A-Za-z][A-Za-z0-9_]*', ID),
 ]
 
-def imp_lex(characters):
+def rig_lex(characters):
     return lexer.lex(characters, token_exprs)

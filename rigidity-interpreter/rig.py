@@ -1,9 +1,9 @@
 import sys
-from imp_parser import *
-from imp_lexer import *
+from rig_parser import *
+from rig_lexer import *
 
 def usage():
-    sys.stderr.write('Usage: imp filename\n')
+    sys.stderr.write('Usage: rig filename\n')
     sys.exit(1)
 
 if __name__ == '__main__':
@@ -11,8 +11,8 @@ if __name__ == '__main__':
         usage()
     filename = sys.argv[1]
     text = open(filename).read()
-    tokens = imp_lex(text)
-    parse_result = imp_parse(tokens)
+    tokens = rig_lex(text)
+    parse_result = rig_parse(tokens)
     if not parse_result:
         sys.stderr.write('Parse error!\n')
         sys.exit(1)

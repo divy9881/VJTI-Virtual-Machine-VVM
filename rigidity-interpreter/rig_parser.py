@@ -1,6 +1,6 @@
-from imp_lexer import *
+from rig_lexer import *
 from combinators import *
-from imp_ast import *
+from rig_ast import *
 from functools import reduce
 
 # Basic parsers
@@ -11,7 +11,7 @@ num = Tag(INT) ^ (lambda i: int(i))
 id = Tag(ID)
 
 # Top level parser
-def imp_parse(tokens):
+def rig_parse(tokens):
     ast = parser()(tokens, 0)
     return ast
 
@@ -92,7 +92,7 @@ def aexp_value():
     return (num ^ (lambda i: IntAexp(i))) | \
            (id  ^ (lambda v: VarAexp(v)))
 
-# An IMP-specific combinator for binary operator expressions (aexp and bexp)
+# An RIG-specific combinator for binary operator expressions (aexp and bexp)
 def precedence(value_parser, precedence_levels, combine):
     def op_parser(precedence_level):
         return any_operator_in_list(precedence_level) ^ combine
