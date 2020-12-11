@@ -1,3 +1,4 @@
+# Tokens regular expressions
 import lexer
 
 RESERVED = 'RESERVED'

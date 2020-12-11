@@ -1,3 +1,5 @@
+# Token extraction driver
+
 import sys
 from rig_lexer import *
 

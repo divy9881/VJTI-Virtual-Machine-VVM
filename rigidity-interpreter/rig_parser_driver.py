@@ -1,3 +1,4 @@
+# Token parser driver
 import sys
 from rig_parser import *
 

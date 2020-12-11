@@ -1,6 +1,6 @@
 n := 5;
-p := 1;
+factorial := 1;
 while n > 0 do
-  p := p * n;
+  factorial := factorial * n;
   n := n - 1
 end

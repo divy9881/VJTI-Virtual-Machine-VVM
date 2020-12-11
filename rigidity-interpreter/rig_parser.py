@@ -1,3 +1,4 @@
+# Token parsers
 from rig_lexer import *
 from combinators import *
 from rig_ast import *

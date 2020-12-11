@@ -1,3 +1,4 @@
+# Entry point for code execution engine
 import sys
 from rig_parser import *
 from rig_lexer import *

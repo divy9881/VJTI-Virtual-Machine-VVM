@@ -67,6 +67,7 @@ class Exp(Parser):
         def process_next(parsed):
             (sepfunc, right) = parsed
             return sepfunc(result.value, right)
+
         next_parser = self.separator + self.parser ^ process_next
 
         next_result = result
@@ -74,7 +75,7 @@ class Exp(Parser):
             next_result = next_parser(tokens, result.pos)
             if next_result:
                 result = next_result
-        return result            
+        return result
 
 class Alternate(Parser):
     def __init__(self, left, right):
@@ -96,7 +97,7 @@ class Opt(Parser):
     def __call__(self, tokens, pos):
         result = self.parser(tokens, pos)
         if result:
-            return result
+                return result
         else:
             return Result(None, pos)
 

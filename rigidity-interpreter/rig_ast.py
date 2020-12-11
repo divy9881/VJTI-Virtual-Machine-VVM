@@ -9,6 +9,7 @@ class Aexp(Equality):
 class Bexp(Equality):
     pass
 
+# Assignment statement
 class AssignStatement(Statement):
     def __init__(self, name, aexp):
         self.name = name
@@ -21,6 +22,7 @@ class AssignStatement(Statement):
         value = self.aexp.eval(env)
         env[self.name] = value
 
+# Compound statement
 class CompoundStatement(Statement):
     def __init__(self, first, second):
         self.first = first
@@ -33,6 +35,7 @@ class CompoundStatement(Statement):
         self.first.eval(env)
         self.second.eval(env)
 
+# If statement
 class IfStatement(Statement):
     def __init__(self, condition, true_stmt, false_stmt):
         self.condition = condition
@@ -50,6 +53,7 @@ class IfStatement(Statement):
             if self.false_stmt:
                 self.false_stmt.eval(env)
 
+# While Statement
 class WhileStatement(Statement):
     def __init__(self, condition, body):
         self.condition = condition
@@ -64,6 +68,7 @@ class WhileStatement(Statement):
             self.body.eval(env)
             condition_value = self.condition.eval(env)
 
+# Integer arithmetic expression
 class IntAexp(Aexp):
     def __init__(self, i):
         self.i = i
@@ -74,6 +79,7 @@ class IntAexp(Aexp):
     def eval(self, env):
         return self.i
 
+# Variable arithmetic expression
 class VarAexp(Aexp):
     def __init__(self, name):
         self.name = name
@@ -87,6 +93,7 @@ class VarAexp(Aexp):
         else:
             return 0
 
+# Binary operations arithmetic expresssion
 class BinopAexp(Aexp):
     def __init__(self, op, left, right):
         self.op = op
@@ -111,6 +118,7 @@ class BinopAexp(Aexp):
             raise RuntimeError('unknown operator: ' + self.op)
         return value
 
+# Relational opertions boolean expression
 class RelopBexp(Bexp):
     def __init__(self, op, left, right):
         self.op = op
@@ -139,6 +147,7 @@ class RelopBexp(Bexp):
             raise RuntimeError('unknown operator: ' + self.op)
         return value
 
+# AND operation boolean expression
 class AndBexp(Bexp):
     def __init__(self, left, right):
         self.left = left
@@ -152,6 +161,7 @@ class AndBexp(Bexp):
         right_value = self.right.eval(env)
         return left_value and right_value
 
+# OR operation boolean expression
 class OrBexp(Bexp):
     def __init__(self, left, right):
         self.left = left
@@ -165,6 +175,7 @@ class OrBexp(Bexp):
         right_value = self.right.eval(env)
         return left_value or right_value
 
+# NOT operation boolean expression
 class NotBexp(Bexp):
     def __init__(self, exp):
         self.exp = exp
