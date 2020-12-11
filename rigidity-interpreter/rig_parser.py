@@ -3,7 +3,7 @@ from rig_lexer import *
 from combinators import *
 from rig_ast import *
 from functools import reduce
-
+    
 # Basic parsers
 def keyword(kw):
     return Reserved(kw, RESERVED)

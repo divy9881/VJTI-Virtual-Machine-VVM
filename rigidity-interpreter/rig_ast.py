@@ -93,7 +93,7 @@ class VarAexp(Aexp):
         else:
             return 0
 
-# Binary operations arithmetic expresssion
+# Binary operation arithmetic expresssion
 class BinopAexp(Aexp):
     def __init__(self, op, left, right):
         self.op = op
@@ -118,7 +118,7 @@ class BinopAexp(Aexp):
             raise RuntimeError('unknown operator: ' + self.op)
         return value
 
-# Relational opertions boolean expression
+# Relational operation boolean expression
 class RelopBexp(Bexp):
     def __init__(self, op, left, right):
         self.op = op
