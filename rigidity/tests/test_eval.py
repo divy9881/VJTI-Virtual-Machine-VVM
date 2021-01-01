@@ -6,11 +6,11 @@ class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):
         tokens = rig_lex(code)
         result = rig_parse(tokens)
-        self.assertNotEquals(None, result)
+        self.assertNotEqual(None, result)
         program = result.value
         env = {}
         program.eval(env)
-        self.assertEquals(expected_env, env)
+        self.assertEqual(expected_env, env)
 
     def test_assign(self):
         self.program_test('x := 1', {'x': 1})

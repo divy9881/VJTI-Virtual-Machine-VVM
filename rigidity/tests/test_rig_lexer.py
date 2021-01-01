@@ -5,7 +5,7 @@ from ..rigidity_parser import *
 class TestLexer(unittest.TestCase):
     def lexer_test(self, code, expected):
         actual = lex(code, token_exprs, reserved_keywords, RESERVED)
-        self.assertEquals(expected, actual)
+        self.assertEqual(expected, actual)
 
     def test_empty(self):
         self.lexer_test('', [])
