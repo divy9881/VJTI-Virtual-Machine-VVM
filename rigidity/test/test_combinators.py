@@ -1,6 +1,6 @@
 import unittest
-from rig_lexer import *
-from combinators import *
+from ..lexer.rig_lexer import *
+from ..combinators import *
 
 id = Tag(ID)
 integer = Tag(INT)

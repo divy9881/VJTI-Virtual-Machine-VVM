@@ -1,6 +1,6 @@
 import unittest
-from rig_lexer import *
-from rig_parser import *
+from ..lexer.rig_lexer import *
+from ..parser.rig_parser import *
 
 class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):

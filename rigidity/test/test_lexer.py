@@ -1,5 +1,5 @@
 import unittest
-from lexer import *
+from ..lexer.lexer import *
 
 KEYWORD = 'KEYWORD'
 INT = 'INT'

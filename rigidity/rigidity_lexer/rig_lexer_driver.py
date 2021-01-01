@@ -1,7 +1,7 @@
 # Token extraction driver
 
 import sys
-from rig_lexer import *
+from .rig_lexer import *
 
 if __name__ == '__main__':
     filename = sys.argv[1]

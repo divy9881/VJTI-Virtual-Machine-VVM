@@ -1,6 +1,6 @@
 import unittest
-from rig_lexer import *
-from rig_parser import *
+from ..lexer.rig_lexer import *
+from ..parser.rig_parser import *
 
 class TestRigParser(unittest.TestCase):
     def parser_test(self, code, parser, expected):

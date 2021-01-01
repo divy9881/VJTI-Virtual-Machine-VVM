@@ -1,5 +1,5 @@
 # Tokens regular expressions
-import lexer
+from .lexer import *
 
 RESERVED = 'RESERVED'
 INT      = 'INT'
@@ -36,4 +36,4 @@ token_exprs = [
 ]
 
 def rig_lex(characters):
-    return lexer.lex(characters, token_exprs)
+    return lex(characters, token_exprs)
