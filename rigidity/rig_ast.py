@@ -1,4 +1,4 @@
-from equality import *
+from .equality import *
 
 class Statement(Equality):
     pass

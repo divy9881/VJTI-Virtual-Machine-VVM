@@ -1,7 +1,7 @@
 # Entry point for code execution engine
 import sys
-from rigidity_lexer import *
-from rigidity_parser import *
+from .rigidity_lexer import *
+from .rigidity_parser import *
 
 def usage():
     sys.stderr.write('Usage: rig filename\n')

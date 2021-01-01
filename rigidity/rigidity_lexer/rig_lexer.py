@@ -22,18 +22,11 @@ token_exprs = [
     (r'>',                     RESERVED),
     (r'!=',                    RESERVED),
     (r'=',                     RESERVED),
-    (r'and',                   RESERVED),
-    (r'or',                    RESERVED),
-    (r'not',                   RESERVED),
-    (r'if',                    RESERVED),
-    (r'then',                  RESERVED),
-    (r'else',                  RESERVED),
-    (r'while',                 RESERVED),
-    (r'do',                    RESERVED),
-    (r'end',                   RESERVED),
     (r'[0-9]+',                INT),
     (r'[A-Za-z][A-Za-z0-9_]*', ID),
 ]
 
+reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end']
+
 def rig_lex(characters):
-    return lex(characters, token_exprs)
+    return lex(characters, token_exprs, reserved_keywords, RESERVED)
