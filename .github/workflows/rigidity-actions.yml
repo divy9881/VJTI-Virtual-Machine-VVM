@@ -1,0 +1,18 @@
+name: rigidity
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8]
+
+    steps:
+
+    - name: Execute unittests
+      run: |
+        ls
+        python -m rigidity.tests.test
