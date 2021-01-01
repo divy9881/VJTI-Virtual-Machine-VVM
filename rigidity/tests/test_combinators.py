@@ -1,6 +1,6 @@
 import unittest
-from ..lexer.rig_lexer import *
-from ..combinators import *
+from ..rigidity_lexer import *
+from ..rigidity_parser import *
 
 id = Tag(ID)
 integer = Tag(INT)

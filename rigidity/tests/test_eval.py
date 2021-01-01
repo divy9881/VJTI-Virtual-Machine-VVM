@@ -1,6 +1,6 @@
 import unittest
-from ..lexer.rig_lexer import *
-from ..parser.rig_parser import *
+from ..rigidity_lexer import *
+from ..rigidity_parser import *
 
 class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):
