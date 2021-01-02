@@ -13,7 +13,11 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     text = open(filename).read()
     tokens = rig_lex(text)
-    parse_result = rig_parse(tokens)
+    optimized_tokens = optimize_tokens(tokens)
+    if not optimized_tokens:
+        sys.stderr.write('Lex error!\n')
+        sys.exit(1)
+    parse_result = rig_parse(optimized_tokens)
     if not parse_result:
         sys.stderr.write('Parse error!\n')
         sys.exit(1)

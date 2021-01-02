@@ -17,7 +17,7 @@ def rig_parse(tokens):
     return ast
 
 def parser():
-    return Phrase(stmt_list())    
+    return Phrase(stmt_list())
 
 # Statements
 def stmt_list():
