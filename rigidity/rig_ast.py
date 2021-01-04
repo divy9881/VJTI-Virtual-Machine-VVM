@@ -91,7 +91,8 @@ class VarAexp(Aexp):
         if self.name in env:
             return env[self.name]
         else:
-            return 0
+            # return 0
+            raise RuntimeError('unknown Identifier error')
 
 # Binary operation arithmetic expresssion
 class BinopAexp(Aexp):

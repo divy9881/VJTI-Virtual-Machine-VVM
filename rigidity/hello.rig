@@ -2,5 +2,7 @@ n := 5;
 factorial := 1;
 while n > 0 do
   factorial := factorial * n;
-  n := n - 1
-end
+  n := n - 1;
+  k := n + 1
+end;
+bot := k + 1

@@ -14,15 +14,20 @@ id = Tag(ID)
 # Top level parser
 def rig_parse(tokens):
     ast = parser()(tokens, 0)
+    # Here parser function returs a Phrase object to which tokens and zero is passed 
+    # and __call__ of Phrase is called.
     return ast
 
 def parser():
     return Phrase(stmt_list())
+    # Here stmt_list() returns a parser
 
 # Statements
 def stmt_list():
     separator = keyword(';') ^ (lambda x: lambda l, r: CompoundStatement(l, r))
+    # This returns a Process Object with the keyword function acting as parser
     return Exp(stmt(), separator)
+    # Here stmt() acts as the parser
 
 def stmt():
     return assign_stmt() | \
@@ -31,9 +36,12 @@ def stmt():
 
 def assign_stmt():
     def process(parsed):
+        print(parsed)
         ((name, _), exp) = parsed
         return AssignStatement(name, exp)
     return id + keyword(':=') + aexp() ^ process
+    # Here + concats the results and ^ will create a process object
+    # The `id + keyword(':=') + aexp()` is passed as parameter to the process function
 
 def if_stmt():
     def process(parsed):
