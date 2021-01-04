@@ -1,7 +1,7 @@
 # Token parsers
-from rigidity_lexer import *
-from combinators import *
-from rig_ast import *
+from ..combinators import *
+from ..rig_ast import *
+from ..rigidity_lexer import *
 from functools import reduce
     
 # Basic parsers
@@ -17,7 +17,7 @@ def rig_parse(tokens):
     return ast
 
 def parser():
-    return Phrase(stmt_list())    
+    return Phrase(stmt_list())
 
 # Statements
 def stmt_list():

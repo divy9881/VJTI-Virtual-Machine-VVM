@@ -1,7 +1,7 @@
 import sys
 import re
 
-def lex(characters, token_exprs):
+def lex(characters, token_exprs, reserved_keywords, RESERVED):
     pos = 0
     tokens = []
     while pos < len(characters):
@@ -12,8 +12,14 @@ def lex(characters, token_exprs):
             match = regex.match(characters, pos)
             if match:
                 text = match.group(0)
-                if tag:
+                if text == '\n':
+                    token = (text, None)
+                    tokens.append(token)
+                elif tag and text not in reserved_keywords:
                     token = (text, tag)
+                    tokens.append(token)
+                elif tag:
+                    token = (text, RESERVED)
                     tokens.append(token)
                 break
         if not match:

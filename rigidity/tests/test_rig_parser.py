@@ -1,13 +1,13 @@
 import unittest
-from ..lexer.rig_lexer import *
-from ..parser.rig_parser import *
+from ..rigidity_lexer import *
+from ..rigidity_parser import *
 
 class TestRigParser(unittest.TestCase):
     def parser_test(self, code, parser, expected):
         tokens = rig_lex(code)
         result = parser(tokens, 0)
-        self.assertNotEquals(None, result)
-        self.assertEquals(expected, result.value)
+        self.assertNotEqual(None, result)
+        self.assertEqual(expected, result.value)
 
     def test_precedence(self):
         def combine(op):
