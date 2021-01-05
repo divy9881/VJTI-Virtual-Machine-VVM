@@ -10,17 +10,17 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        program.eval(env)
+        program.eval(env, 0)
         self.assertEqual(expected_env, env)
 
     def test_assign(self):
-        self.program_test('x := 1', {'x': 1})
+        self.program_test('x := 1', {'x': [1, 0]})
 
     def test_compound(self):
-        self.program_test('x := 1; y := 2', {'x': 1, 'y': 2})
+        self.program_test('x := 1; y := 2', {'x': [1, 0], 'y': [2, 0]})
 
     def test_if(self):
-        self.program_test('if 1 < 2 then x := 1 else x := 2 end', {'x': 1})
+        self.program_test('if 1 < 2 then x := 1 else x := 2 end', {})
 
     def test_single_line_comment(self):
         self.program_test(
@@ -29,7 +29,7 @@ class TestEvaluation(unittest.TestCase):
             // y := 2;
             z := 3
             ''',
-            {'x': 1, 'z': 3}
+            {'x': [1, 0], 'z': [3, 0]}
         )
 
     def test_multi_line_comment(self):
@@ -41,7 +41,7 @@ class TestEvaluation(unittest.TestCase):
             z := 3
             */
             ''',
-            {'x': 1}
+            {'x': [1, 0]}
         )
 
     # def test_while(self):
