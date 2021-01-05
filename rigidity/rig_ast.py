@@ -20,6 +20,8 @@ class AssignStatement(Statement):
 
     def eval(self, env, scope):
         value = self.aexp.eval(env, scope)
+        # Here if the name exists then we only change the value and no the scope
+        # If not present we create a new entry
         if self.name in env:
             env[self.name][0] = value
         else:
@@ -115,7 +117,6 @@ class VarAexp(Aexp):
             return env[self.name][0]
             # Here I am returning only the value of variable and not its scope
         else:
-            # return 0
             raise NameError('name ' + self.name + ' is not defined in this scope')
 
 # Binary operation arithmetic expresssion

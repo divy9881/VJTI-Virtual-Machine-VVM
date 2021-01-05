@@ -37,7 +37,6 @@ def stmt():
 def assign_stmt():
     def process(parsed):
         ((name, _), exp) = parsed
-        # print(name, exp)
         return AssignStatement(name, exp)
     return id + keyword(':=') + aexp() ^ process
     # Here + concats the results and ^ will create a process object

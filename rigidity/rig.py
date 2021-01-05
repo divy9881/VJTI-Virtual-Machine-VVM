@@ -2,7 +2,6 @@
 import sys
 from .rigidity_lexer import *
 from .rigidity_parser import *
-import pprint as pp
 
 def usage():
     sys.stderr.write('Usage: rig filename\n')
@@ -24,11 +23,10 @@ if __name__ == '__main__':
         sys.exit(1)
 
     ast = parse_result.value
-    print(ast)
     env = {}
     ast.eval(env, 0)
     # Here 0 represents the current scope for variables
-    print(env)
+    
     sys.stdout.write('Final variable values:\n')
     for name in env:
         sys.stdout.write('%s: %s\n' % (name, env[name][0]))
