@@ -116,7 +116,7 @@ class VarAexp(Aexp):
             # Here I am returning only the value of variable and not its scope
         else:
             # return 0
-            raise RuntimeError('unknown Identifier error')
+            raise NameError('name ' + self.name + ' is not defined in this scope')
 
 # Binary operation arithmetic expresssion
 class BinopAexp(Aexp):
