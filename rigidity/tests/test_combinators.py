@@ -4,8 +4,6 @@ from ..rigidity_parser import *
 
 id = Tag(ID)
 integer = Tag(INT)
-def keyword(s):
-    return Reserved(s, RESERVED)
 
 class TestCombinators(unittest.TestCase):
     def combinator_test(self, code, parser, expected):

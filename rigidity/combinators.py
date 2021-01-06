@@ -81,6 +81,7 @@ class Alternate(Parser):
     def __init__(self, left, right):
         self.left = left
         self.right = right
+        # Here left right act as parsers only
 
     def __call__(self, tokens, pos):
         left_result = self.left(tokens, pos)
