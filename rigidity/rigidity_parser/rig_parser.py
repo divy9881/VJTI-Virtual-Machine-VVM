@@ -8,7 +8,9 @@ from functools import reduce
 def keyword(kw):
     return Reserved(kw, RESERVED)
 
-num = Tag(INT) ^ (lambda i: int(i))
+num_i = Tag(INT) ^ (lambda i: int(i))
+num_f = Tag(FLOAT) ^ (lambda f: float(f))
+num_s = Tag(STRING) ^ (lambda s: str(s))
 id = Tag(ID)
 
 # Top level parser
@@ -97,8 +99,10 @@ def aexp_group():
     return keyword('(') + Lazy(aexp) + keyword(')') ^ process_group
            
 def aexp_value():
-    return (num ^ (lambda i: IntAexp(i))) | \
-           (id  ^ (lambda v: VarAexp(v)))
+    return (num_i ^ (lambda i: IntAexp(i))) | \
+           (num_f ^ (lambda f: FloatAexp(f))) | \
+           (num_s ^ (lambda s: StringAexp(s))) | \
+           (id ^ (lambda v: VarAexp(v)))         
 
 # An RIG-specific combinator for binary operator expressions (aexp and bexp)
 def precedence(value_parser, precedence_levels, combine):

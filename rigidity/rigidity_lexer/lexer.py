@@ -13,13 +13,13 @@ def lex(characters, token_exprs, reserved_keywords, RESERVED):
             if match:
                 text = match.group(0)
                 if text == '\n':
-                    token = (text, None)
+                    token = [text, None]
                     tokens.append(token)
                 elif tag and text not in reserved_keywords:
-                    token = (text, tag)
+                    token = [text, tag]
                     tokens.append(token)
                 elif tag:
-                    token = (text, RESERVED)
+                    token = [text, RESERVED]
                     tokens.append(token)
                 break
         if not match:

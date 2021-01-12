@@ -1,5 +1,6 @@
 n := 5;
-factorial := 1;
+factorial := 1.0;
+str := 'test';
 while n > 0 do
   factorial := factorial * n;
   n := n - 1

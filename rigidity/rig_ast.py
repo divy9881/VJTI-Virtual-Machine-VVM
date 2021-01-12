@@ -104,6 +104,28 @@ class IntAexp(Aexp):
     def eval(self, env, scope):
         return self.i
 
+# Float arithmetic expression
+class FloatAexp(Aexp):
+    def __init__(self, f):
+        self.f = f
+
+    def __repr__(self):
+        return 'FloatAexp(%f)' % self.f
+
+    def eval(self, env, scope):
+        return self.f
+
+# Integer arithmetic expression
+class StringAexp(Aexp):
+    def __init__(self, s):
+        self.s = s
+
+    def __repr__(self):
+        return 'StringAexp(%s)' % self.s
+
+    def eval(self, env, scope):
+        return self.s
+
 # Variable arithmetic expression
 class VarAexp(Aexp):
     def __init__(self, name):

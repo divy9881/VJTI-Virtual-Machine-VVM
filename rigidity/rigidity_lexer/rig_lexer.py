@@ -4,6 +4,8 @@ from .lexer import *
 RESERVED = 'RESERVED'
 INT      = 'INT'
 ID       = 'ID'
+FLOAT    = 'FLOAT'
+STRING   = 'STRING'
 
 token_exprs = [
     (r'\n',                    None),
@@ -26,6 +28,8 @@ token_exprs = [
     (r'>',                     RESERVED),
     (r'!=',                    RESERVED),
     (r'=',                     RESERVED),
+    (r'\'[A-Za-z][A-Za-z]*\'', STRING),
+    (r'[0-9]+.[0-9]+',         FLOAT),
     (r'[0-9]+',                INT),
     (r'[A-Za-z][A-Za-z0-9_]*', ID),
 ]
