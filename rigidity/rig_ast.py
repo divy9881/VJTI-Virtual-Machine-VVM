@@ -141,6 +141,27 @@ class VarAexp(Aexp):
         else:
             raise NameError('name ' + self.name + ' is not defined in this scope')
 
+# Indexing expression for any iterable
+class IndexAexp(Aexp):
+    def __init__(self, index_str):
+        self.name = index_str[:index_str.index('[')] # This represents the env variable
+        self.i = int(index_str[index_str.index('[') + 1 : index_str.index(']')]) #This represents the index value
+
+    def __repr__(self):
+        return 'IndexAexp(%s, %s)' % (self.name, self.i)
+
+    def eval(self, env, scope):
+        if self.name in env:
+            if type(env[self.name][0]) == str:
+                if self.i >= 0 and self.i < len(env[self.name][0]):
+                    return env[self.name][0][self.i]
+                else:
+                    raise IndexError('Index is out of bounds!!')
+            else:
+                raise RuntimeError('The identifier is not iterable!!!')
+        else:
+            raise NameError('name ' + self.name + ' is not defined in this scope')
+
 # Binary operation arithmetic expresssion
 class BinopAexp(Aexp):
     def __init__(self, op, left, right):
