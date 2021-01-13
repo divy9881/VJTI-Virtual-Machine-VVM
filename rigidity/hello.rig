@@ -1,10 +1,8 @@
-n := 5;
+n := 2;
 factorial := 1.0;
 str := 'test';
 while n > 0 do
   factorial := factorial * n;
   n := n - 1
-  // k := n + 1
 end;
-s := str[10]
-// bot := k + 1
+s := str[1]

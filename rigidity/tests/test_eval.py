@@ -53,6 +53,35 @@ class TestEvaluation(unittest.TestCase):
             {'x': [1, 0]}
         )
 
+    def test_int_float_string(self):
+        self.program_test(
+            '''
+            n := 5;
+            factorial := 1.0;
+            str := 'test'
+            ''',
+            {'n': [5, 0], 'factorial': [1.0, 0], 'str': ['test', 0]}
+        )
+
+    def test_indexing_int_string(self):
+        self.program_test(
+            '''
+            str := 'test';
+            s := str[0]
+            ''',
+            {'str': ['test', 0], 's': ['t', 0]}
+        )
+
+    def test_indexing_variable_string(self):
+        self.program_test(
+            '''
+            n := 1;
+            str := 'test';
+            s := str[n]
+            ''',
+            {'n': [1, 0], 'str': ['test', 0], 's': ['e', 0]}
+        )                 
+
     def test_scope_error(self):
         self.scope_test(
             '''
@@ -66,6 +95,54 @@ class TestEvaluation(unittest.TestCase):
             bot := k + 1
             ''',
             NameError
+        )
+
+    def test_index_out_of_bounds_error(self):
+        self.scope_test(
+            '''
+            str := 'test';
+            s := str[5]
+            ''',
+            IndexError
+        )
+
+    def test_index_var_error(self):
+        self.scope_test(
+            '''
+            n := 0;
+            str := 'test';
+            s := str[t]
+            ''',
+            NameError
+        )
+
+    def test_index_string_error(self):
+        self.scope_test(
+            '''
+            str := 'test';
+            s := st[0]
+            ''',
+            NameError
+        )
+
+    def test_index_error(self):
+        self.scope_test(
+            '''
+            n := 1.0;
+            str := 'test';
+            s := str[n]
+            ''',
+            TypeError
+        )
+
+    def test_index_runtime_error(self):
+        self.scope_test(
+            '''
+            n := 1.0;
+            str := 'test';
+            s := n[0]
+            ''',
+            RuntimeError
         )
 
     # def test_while(self):
