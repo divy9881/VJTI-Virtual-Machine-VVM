@@ -16,7 +16,7 @@ class TestRigParser(unittest.TestCase):
             else:
                 return lambda l, r: int(l) + int(r)
         levels = [['*'], ['+']]
-        parser = precedence(num, levels, combine)
+        parser = precedence(num_i, levels, combine)
         self.parser_test('2 * 3 + 4', parser, 10)
         self.parser_test('2 + 3 * 4', parser, 14)
 

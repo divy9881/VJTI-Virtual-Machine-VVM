@@ -104,6 +104,28 @@ class IntAexp(Aexp):
     def eval(self, env, scope):
         return self.i
 
+# Float arithmetic expression
+class FloatAexp(Aexp):
+    def __init__(self, f):
+        self.f = f
+
+    def __repr__(self):
+        return 'FloatAexp(%f)' % self.f
+
+    def eval(self, env, scope):
+        return self.f
+
+# Integer arithmetic expression
+class StringAexp(Aexp):
+    def __init__(self, s):
+        self.s = s
+
+    def __repr__(self):
+        return 'StringAexp(%s)' % self.s
+
+    def eval(self, env, scope):
+        return self.s
+
 # Variable arithmetic expression
 class VarAexp(Aexp):
     def __init__(self, name):
@@ -116,6 +138,40 @@ class VarAexp(Aexp):
         if self.name in env:
             return env[self.name][0]
             # Here I am returning only the value of variable and not its scope
+        else:
+            raise NameError('name ' + self.name + ' is not defined in this scope')
+
+# Indexing expression for any iterable
+class IndexAexp(Aexp):
+    def __init__(self, index_str):
+        self.name = index_str[:index_str.index('[')] # This represents the env variable
+        self.i = index_str[index_str.index('[') + 1 : index_str.index(']')] #This represents the index value
+
+    def __repr__(self):
+        return 'IndexAexp(%s, %s)' % (self.name, self.i)
+
+    def eval(self, env, scope):
+        if self.name in env:
+            if type(env[self.name][0]) == str:
+                if self.i.isnumeric():
+                    self.i = int(self.i)
+                    if self.i >= 0 and self.i < len(env[self.name][0]):
+                        return env[self.name][0][self.i]
+                    else:
+                        raise IndexError('Index is out of bounds!!')
+                else:
+                    if self.i in env:
+                        if isinstance(env[self.i][0], int):
+                            if env[self.i][0] >= 0 and env[self.i][0] < len(env[self.name][0]):
+                                return env[self.name][0][env[self.i][0]]
+                            else:
+                                raise IndexError('Index is out of bounds!!')
+                        else:
+                            raise TypeError('string indices must be integers')
+                    else:
+                        raise NameError('name ' + self.i + ' is not defined in this scope')
+            else:
+                raise RuntimeError('The identifier is not iterable!!!')
         else:
             raise NameError('name ' + self.name + ' is not defined in this scope')
 

@@ -4,7 +4,10 @@ def optimize_tokens(tokens):
     optimized_tokens = []
     index = 0
     while index < len(tokens):
-        if tokens[index][1] != None and tokens[index][0] not in comment_tokens:
+        if tokens[index][1] != None and tokens[index][1] == 'STRING':
+            tokens[index][0] = tokens[index][0][1:-1]
+            optimized_tokens.append(tokens[index])
+        elif tokens[index][1] != None and tokens[index][0] not in comment_tokens:
             optimized_tokens.append(tokens[index])
             index += 1
             continue

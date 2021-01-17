@@ -14,6 +14,7 @@ if __name__ == '__main__':
     text = open(filename).read()
     tokens = rig_lex(text)
     optimized_tokens = optimize_tokens(tokens)
+
     if not optimized_tokens:
         sys.stderr.write('Lex error!\n')
         sys.exit(1)

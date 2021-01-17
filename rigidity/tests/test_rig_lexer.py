@@ -11,16 +11,16 @@ class TestLexer(unittest.TestCase):
         self.lexer_test('', [])
 
     def test_id(self):
-        self.lexer_test('abc', [('abc', ID)])
+        self.lexer_test('abc', [['abc', ID]])
 
     def test_keyword_1(self):
-        self.lexer_test('while', [('while', RESERVED)])
+        self.lexer_test('while', [['while', RESERVED]])
     
     def test_keyword_2(self):
-        self.lexer_test('whilet dot if', [('whilet', ID), ('dot', ID), ('if', RESERVED)])
+        self.lexer_test('whilet dot if', [['whilet', ID], ['dot', ID], ['if', RESERVED]])
 
     def test_space(self):
         self.lexer_test(' ', [])
 
     def test_id_space(self):
-        self.lexer_test('abc def', [('abc', ID), ('def', ID)])
+        self.lexer_test('abc def', [['abc', ID], ['def', ID]])
