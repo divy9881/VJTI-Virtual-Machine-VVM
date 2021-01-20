@@ -14,7 +14,7 @@ if __name__ == '__main__':
     text = open(filename).read()
     tokens = rig_lex(text)
     optimized_tokens = optimize_tokens(tokens)
-
+    print(optimized_tokens)
     if not optimized_tokens:
         sys.stderr.write('Lex error!\n')
         sys.exit(1)
@@ -30,4 +30,5 @@ if __name__ == '__main__':
     
     sys.stdout.write('Final variable values:\n')
     for name in env:
+        print(type(env[name][0]))
         sys.stdout.write('%s: %s\n' % (name, env[name][0]))

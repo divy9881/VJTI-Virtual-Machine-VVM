@@ -13,6 +13,7 @@ num_f = Tag(FLOAT) ^ (lambda f: float(f))
 num_s = Tag(STRING) ^ (lambda s: str(s))
 id = Tag(ID)
 index = Tag(INDEX)
+new_list = Tag(LIST)
 
 # Top level parser
 def rig_parse(tokens):
@@ -104,7 +105,8 @@ def aexp_value():
            (num_f ^ (lambda f: FloatAexp(f))) | \
            (num_s ^ (lambda s: StringAexp(s))) | \
            (id ^ (lambda v: VarAexp(v))) | \
-           (index ^ (lambda i: IndexAexp(i)))         
+           (index ^ (lambda i: IndexAexp(i))) | \
+           (new_list ^ (lambda l: ListAexp(l)))
 
 # An RIG-specific combinator for binary operator expressions (aexp and bexp)
 def precedence(value_parser, precedence_levels, combine):

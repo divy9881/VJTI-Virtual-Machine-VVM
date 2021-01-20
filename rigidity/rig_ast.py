@@ -126,6 +126,17 @@ class StringAexp(Aexp):
     def eval(self, env, scope):
         return self.s
 
+# List expression returning list of elements
+class ListAexp(Aexp):
+    def __init__(self, l):
+        self.l = list(l)
+
+    def __repr__(self):
+        return 'ListAexp(%s)' % self.l
+
+    def eval(self, env, scope):
+        return self.l
+
 # Variable arithmetic expression
 class VarAexp(Aexp):
     def __init__(self, name):
