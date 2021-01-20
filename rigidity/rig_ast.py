@@ -163,7 +163,7 @@ class IndexAexp(Aexp):
 
     def eval(self, env, scope):
         if self.name in env:
-            if type(env[self.name][0]) == str:
+            if type(env[self.name][0]) == str or type(env[self.name][0]) == list:
                 if self.i.isnumeric():
                     self.i = int(self.i)
                     if self.i >= 0 and self.i < len(env[self.name][0]):
@@ -178,7 +178,7 @@ class IndexAexp(Aexp):
                             else:
                                 raise IndexError('Index is out of bounds!!')
                         else:
-                            raise TypeError('string indices must be integers')
+                            raise TypeError('indices must be integers')
                     else:
                         raise NameError('name ' + self.i + ' is not defined in this scope')
             else:
