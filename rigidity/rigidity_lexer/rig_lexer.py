@@ -8,6 +8,7 @@ FLOAT    = 'FLOAT'
 STRING   = 'STRING'
 INDEX    = 'INDEX'
 LIST     = 'LIST'
+MAP      = 'MAP'
 
 token_exprs = [
     (r'\n',                                     None),
@@ -34,8 +35,9 @@ token_exprs = [
     (r'\[',                                     LIST),
     (r'\,',                                     RESERVED),
     (r'\]',                                     LIST),
+    (r'{}',                                     MAP),
     (r'\'[A-Za-z][A-Za-z]*\'',                  STRING),
-    (r'[0-9]+\.[0-9]+',                          FLOAT),
+    (r'[0-9]+\.[0-9]+',                         FLOAT),
     (r'[0-9]+',                                 INT),
     (r'[A-Za-z][A-Za-z0-9_]*',                  ID),
 ]

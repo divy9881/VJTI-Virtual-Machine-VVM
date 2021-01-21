@@ -129,13 +129,24 @@ class StringAexp(Aexp):
 # List expression returning list of elements
 class ListAexp(Aexp):
     def __init__(self, l):
-        self.l = list(l)
+        self.l = l
 
     def __repr__(self):
         return 'ListAexp(%s)' % self.l
 
     def eval(self, env, scope):
         return self.l
+
+# Map expression returning empty dictionary
+class MapAexp(Aexp):
+    def __init__(self, m):
+        self.m = {}
+
+    def __repr__(self):
+        return 'MapAexp(%s)' % self.m
+
+    def eval(self, env, scope):
+        return self.m
 
 # Variable arithmetic expression
 class VarAexp(Aexp):

@@ -2,6 +2,7 @@ n := 2;
 factorial := 11.0;
 str := 'test';
 l := [11,2];
+d := {};
 while n > 0 do
   factorial := factorial * n;
   n := n - 1
