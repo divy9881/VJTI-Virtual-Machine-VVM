@@ -85,7 +85,7 @@ class TestEvaluation(unittest.TestCase):
     def test_list(self):
         self.program_test(
             '''
-            n := [1,1.0, 'test'];
+            n := [1,1.0,'test']
             ''',
             {'n': [[1,1.0,'test'], 0]}
         )

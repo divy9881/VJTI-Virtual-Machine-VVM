@@ -237,7 +237,7 @@ class IndexAexp(Aexp):
                 if self.i in env[self.name][0].keys():
                     return env[self.name][0][self.i]
                 else:
-                    raise NameError('key : ' + self.i + ' is not defined in this Map')
+                    raise NameError('key : ' + str(self.i) + ' is not defined in this Map')
             else:
                 raise RuntimeError('The identifier is not iterable!!!')
         else:

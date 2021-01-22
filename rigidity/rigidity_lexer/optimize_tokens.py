@@ -45,7 +45,7 @@ def optimize_tokens(tokens):
                 elif tokens[index][1] == 'FLOAT':
                     l.append(float(tokens[index][0]))
                 elif tokens[index][1] == 'STRING':
-                    l.append(str(tokens[index][0]))                    
+                    l.append(str(tokens[index][0][1:-1]))                    
                 index += 1
             if flag == 0:
                 return None

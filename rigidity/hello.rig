@@ -3,10 +3,10 @@ factorial := 11.0;
 str := 'test';
 l := [11,2];
 d := {};
-d['harsh'] := 1;
+d[1] := 1;
 while n > 0 do
   factorial := factorial * n;
   n := n - 1
 end;
 s := str[0];
-h := d['harsh']
+h := d[2]
