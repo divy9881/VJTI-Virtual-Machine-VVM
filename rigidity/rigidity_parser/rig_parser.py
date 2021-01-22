@@ -43,7 +43,8 @@ def assign_stmt():
     def process(parsed):
         ((name, _), exp) = parsed
         return AssignStatement(name, exp)
-    return id + keyword(':=') + aexp() ^ process
+    return (id + keyword(':=') + aexp() ^ process) | \
+           (index + keyword(':=') + aexp() ^ process)
     # Here + concats the results and ^ will create a process object
     # The `id + keyword(':=') + aexp()` is passed as parameter to the process function
 

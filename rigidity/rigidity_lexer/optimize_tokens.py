@@ -32,14 +32,12 @@ def optimize_tokens(tokens):
         elif tokens[index][1] != None and tokens[index][0] == ']':
             return None
         elif tokens[index][1] != None and tokens[index][0] == '[':
-            print("in")
             index += 1
             l = []
             flag = 0
             while index < len(tokens):
                 if tokens[index][0] == ']':
                     flag = 1
-                    print(l)
                     optimized_tokens.append([l, 'LIST'])
                     break
                 if tokens[index][1] == 'INT':
