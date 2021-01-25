@@ -22,10 +22,36 @@ class AssignStatement(Statement):
         value = self.aexp.eval(env, scope)
         # Here if the name exists then we only change the value and no the scope
         # If not present we create a new entry
-        if self.name in env:
-            env[self.name][0] = value
-        else:
-            env[self.name] = list((value, scope))
+        
+        if '[' in self.name:
+            dict_name = self.name[: self.name.index('[')]
+            key_name = self.name[self.name.index('[') + 1: self.name.index(']')]
+
+            if dict_name in env:
+                # For float as a key
+                if '.' in key_name:
+                    key = float(key_name)
+                    env[dict_name][0][key] = value
+
+                #For string as a key
+                elif '\'' in key_name:
+                    key = str(key_name[1:-1])
+                    env[dict_name][0][key] = value
+
+                #For int as key
+                else:
+                    if key_name.isnumeric():
+                        key = int(key_name)
+                        env[dict_name][0][key] = value
+                    else:
+                        raise TypeError('key must be either integers, float or string')
+            else:
+                raise NameError('name ' + dict_name + ' is not defined in this scope')
+        else:                             
+            if self.name in env:
+                env[self.name][0] = value
+            else:
+                env[self.name] = list((value, scope))
 
 # Compound statement
 class CompoundStatement(Statement):
@@ -126,6 +152,28 @@ class StringAexp(Aexp):
     def eval(self, env, scope):
         return self.s
 
+# List expression returning list of elements
+class ListAexp(Aexp):
+    def __init__(self, l):
+        self.l = l
+
+    def __repr__(self):
+        return 'ListAexp(%s)' % self.l
+
+    def eval(self, env, scope):
+        return self.l
+
+# Map expression returning empty dictionary
+class MapAexp(Aexp):
+    def __init__(self, m):
+        self.m = {}
+
+    def __repr__(self):
+        return 'MapAexp(%s)' % self.m
+
+    def eval(self, env, scope):
+        return self.m
+
 # Variable arithmetic expression
 class VarAexp(Aexp):
     def __init__(self, name):
@@ -152,7 +200,7 @@ class IndexAexp(Aexp):
 
     def eval(self, env, scope):
         if self.name in env:
-            if type(env[self.name][0]) == str:
+            if type(env[self.name][0]) == str or type(env[self.name][0]) == list:
                 if self.i.isnumeric():
                     self.i = int(self.i)
                     if self.i >= 0 and self.i < len(env[self.name][0]):
@@ -167,9 +215,29 @@ class IndexAexp(Aexp):
                             else:
                                 raise IndexError('Index is out of bounds!!')
                         else:
-                            raise TypeError('string indices must be integers')
+                            raise TypeError('indices must be integers')
                     else:
                         raise NameError('name ' + self.i + ' is not defined in this scope')
+            elif type(env[self.name][0]) == dict:
+                # For float as a index
+                if '.' in self.i:
+                    self.i = float(self.i)
+
+                #For string as a index
+                elif '\'' in self.i:
+                    self.i = str(self.i[1:-1])
+
+                #For int as index
+                else:
+                    if self.i.isnumeric():
+                        self.i = int(self.i)
+                    else:
+                        raise TypeError('Map keys must be either integers, float or string')
+                
+                if self.i in env[self.name][0].keys():
+                    return env[self.name][0][self.i]
+                else:
+                    raise NameError('key : ' + str(self.i) + ' is not defined in this Map')
             else:
                 raise RuntimeError('The identifier is not iterable!!!')
         else:

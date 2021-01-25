@@ -1,8 +1,12 @@
 n := 2;
-factorial := 1.0;
+factorial := 11.0;
 str := 'test';
+l := [11,2];
+d := {};
+d[1] := 1;
 while n > 0 do
   factorial := factorial * n;
   n := n - 1
 end;
-s := str[1]
+s := str[0];
+h := d[2]

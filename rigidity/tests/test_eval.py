@@ -13,7 +13,7 @@ class TestEvaluation(unittest.TestCase):
         program.eval(env, 0)
         self.assertEqual(expected_env, env)
 
-    def scope_test(self, code, expected_error):
+    def error_test(self, code, expected_error):
         tokens = rig_lex(code)
         optimized_tokens = optimize_tokens(tokens)
         result = rig_parse(optimized_tokens)
@@ -80,10 +80,50 @@ class TestEvaluation(unittest.TestCase):
             s := str[n]
             ''',
             {'n': [1, 0], 'str': ['test', 0], 's': ['e', 0]}
-        )                 
+        )
+
+    def test_list(self):
+        self.program_test(
+            '''
+            n := [1,1.0,'test']
+            ''',
+            {'n': [[1,1.0,'test'], 0]}
+        )
+
+    def test_list_indexing(self):
+        self.program_test(
+            '''
+            n := [1,2];
+            a := n[0]
+            ''',
+            {'n': [[1,2], 0], 'a': [1, 0]}
+        )                     
+
+    def test_map(self):
+        self.program_test(
+            '''
+            n := {};
+            n[1] := 1;
+            n[1.2] := 1.2;
+            n['test'] := 'test'
+            ''',
+            {'n': [{1: 1, 1.2: 1.2, 'test': 'test'}, 0]}
+        )     
+
+    def test_map_indexing(self):
+        self.program_test(
+            '''
+            n := {};
+            n[1] := 1;
+            n[1.2] := 1.2;
+            n['test'] := 'test';
+            a := n['test']
+            ''',
+            {'n': [{1: 1, 1.2: 1.2, 'test': 'test'}, 0], 'a': ['test', 0]}
+        )         
 
     def test_scope_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             n := 5;
             factorial := 1;
@@ -98,7 +138,7 @@ class TestEvaluation(unittest.TestCase):
         )
 
     def test_index_out_of_bounds_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             str := 'test';
             s := str[5]
@@ -107,7 +147,7 @@ class TestEvaluation(unittest.TestCase):
         )
 
     def test_index_var_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             n := 0;
             str := 'test';
@@ -117,7 +157,7 @@ class TestEvaluation(unittest.TestCase):
         )
 
     def test_index_string_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             str := 'test';
             s := st[0]
@@ -126,7 +166,7 @@ class TestEvaluation(unittest.TestCase):
         )
 
     def test_index_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             n := 1.0;
             str := 'test';
@@ -136,7 +176,7 @@ class TestEvaluation(unittest.TestCase):
         )
 
     def test_index_runtime_error(self):
-        self.scope_test(
+        self.error_test(
             '''
             n := 1.0;
             str := 'test';
@@ -144,6 +184,18 @@ class TestEvaluation(unittest.TestCase):
             ''',
             RuntimeError
         )
+
+    def test_map_invalid_key(self):
+        self.error_test(
+            '''
+            n := {};
+            n[1] := 1;
+            n[1.2] := 1.2;
+            n['test'] := 'test';
+            a := n[2]
+            ''',
+            NameError
+        )        
 
     # def test_while(self):
     #     self.program_test('x := 10; y := 0; while x > 0 do y := y + 1 end', {'x': 0, 'y': 10})

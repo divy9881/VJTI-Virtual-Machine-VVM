@@ -13,6 +13,8 @@ num_f = Tag(FLOAT) ^ (lambda f: float(f))
 num_s = Tag(STRING) ^ (lambda s: str(s))
 id = Tag(ID)
 index = Tag(INDEX)
+new_list = Tag(LIST)
+new_map = Tag(MAP)
 
 # Top level parser
 def rig_parse(tokens):
@@ -41,7 +43,8 @@ def assign_stmt():
     def process(parsed):
         ((name, _), exp) = parsed
         return AssignStatement(name, exp)
-    return id + keyword(':=') + aexp() ^ process
+    return (id + keyword(':=') + aexp() ^ process) | \
+           (index + keyword(':=') + aexp() ^ process)
     # Here + concats the results and ^ will create a process object
     # The `id + keyword(':=') + aexp()` is passed as parameter to the process function
 
@@ -104,7 +107,9 @@ def aexp_value():
            (num_f ^ (lambda f: FloatAexp(f))) | \
            (num_s ^ (lambda s: StringAexp(s))) | \
            (id ^ (lambda v: VarAexp(v))) | \
-           (index ^ (lambda i: IndexAexp(i)))         
+           (index ^ (lambda i: IndexAexp(i))) | \
+           (new_list ^ (lambda l: ListAexp(l))) | \
+           (new_map ^ (lambda m: MapAexp(m)))
 
 # An RIG-specific combinator for binary operator expressions (aexp and bexp)
 def precedence(value_parser, precedence_levels, combine):
