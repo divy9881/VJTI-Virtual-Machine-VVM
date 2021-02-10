@@ -119,6 +119,39 @@ class WhileStatement(Statement):
         for name in names_to_be_removed:
             env.pop(name)        
 
+# Function Statement
+class FunctionStatement(Statement):
+    def __init__(self, name, body):
+        # print("Name : ", name)
+        # print(type(name))
+        # print("Body : ", body)
+        # print(type(body))
+        # print(type(repr(name)))
+        self.name = repr(name)[repr(name).index('(') + 1 : repr(name).index(')')]
+        self.body = body
+
+    def __repr__(self):
+        return 'FunctionStatement(%s, %s)' % (self.name, self.body)
+
+    def eval(self, env, scope):
+        if self.name in env:
+            raise NameError("Function Already Exists!!!")
+        else:
+            env[self.name] = list((self.body, scope))      
+
+# Function Call Statement
+class FunctionCallStatement(Statement):
+    def __init__(self, name):
+        # print("Name : ", name)
+        # print(type(name))
+        self.name = name
+
+    def __repr__(self):
+        return 'FunctionCallStatement(%s)' % (self.name)
+
+    def eval(self, env, scope):
+        self.name.eval(env, scope)     
+
 # Integer arithmetic expression
 class IntAexp(Aexp):
     def __init__(self, i):
@@ -188,6 +221,31 @@ class VarAexp(Aexp):
             # Here I am returning only the value of variable and not its scope
         else:
             raise NameError('name ' + self.name + ' is not defined in this scope')
+
+# Function name expression
+class FuncAexp(Aexp):
+    def __init__(self, name):
+        self.name = name[:name.index('(')].strip()
+
+    def __repr__(self):
+        return 'FuncAexp(%s)' % self.name
+
+    def eval(self, env, scope):
+        if self.name in env:
+            env[self.name][0].eval(env, scope + 1)
+        else:
+            raise NameError("No function found")
+        
+        # This loop add names of variable that were declared in while statement
+        names_to_be_removed = []
+        for name in env:
+            if env[name][1] > scope:
+                names_to_be_removed.append(name)
+        
+        # This loop removes the names from env
+        for name in names_to_be_removed:
+            env.pop(name) 
+
 
 # Indexing expression for any iterable
 class IndexAexp(Aexp):

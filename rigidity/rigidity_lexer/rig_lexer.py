@@ -9,6 +9,7 @@ STRING   = 'STRING'
 INDEX    = 'INDEX'
 LIST     = 'LIST'
 MAP      = 'MAP'
+FUNC     = 'FUNC'
 
 token_exprs = [
     (r'\n',                                            None),
@@ -39,10 +40,11 @@ token_exprs = [
     (r'\'[A-Za-z][A-Za-z]*\'',                         STRING),
     (r'[0-9]+\.[0-9]+',                                FLOAT),
     (r'[0-9]+',                                        INT),
+    (r'[A-Za-z][A-Za-z0-9_]*\(\)',                     FUNC),
     (r'[A-Za-z][A-Za-z0-9_]*',                         ID),
 ]
 
-reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end']
+reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end', 'function']
 comment_tokens = ['//', '/*', '*/']
 list_tokens = ['[', ']']
 

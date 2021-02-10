@@ -8,6 +8,13 @@ def optimize_tokens(tokens):
             tokens[index][0] = tokens[index][0][1:-1]
             optimized_tokens.append(tokens[index])
         elif tokens[index][1] != None and tokens[index][0] not in comment_tokens and tokens[index][0] not in list_tokens:
+            # if tokens[index][1] != None and tokens[index][0] == 'function':
+            #     index += 1
+            #     while tokens[index][0] != 'end':
+
+            #         optimized_tokens.append([tokens[index][0], 'FUNC'])
+            #         index += 1
+            # else:
             optimized_tokens.append(tokens[index])
             index += 1
             continue

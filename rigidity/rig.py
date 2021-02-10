@@ -14,7 +14,7 @@ if __name__ == '__main__':
     text = open(filename).read()
     tokens = rig_lex(text)
     optimized_tokens = optimize_tokens(tokens)
-    # print(optimized_tokens)
+    print(optimized_tokens)
     if not optimized_tokens:
         sys.stderr.write('Lex error!\n')
         sys.exit(1)
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         sys.stderr.write('Parse error!\n')
         sys.exit(1)
 
-    # print(parse_result)
+    print(parse_result)
     ast = parse_result.value
     env = {}
     print(ast)
