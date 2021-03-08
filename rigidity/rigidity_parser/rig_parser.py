@@ -16,6 +16,7 @@ index = Tag(INDEX)
 new_list = Tag(LIST)
 new_map = Tag(MAP)
 new_func = Tag(FUNC)
+nil = Tag(NULL)
 
 # Top level parser
 def rig_parse(tokens):
@@ -40,7 +41,8 @@ def stmt():
            if_stmt()     | \
            while_stmt()  | \
            function_stmt() | \
-           function_call_stmt()    
+           function_call_stmt() | \
+           return_stmt()       
 
 def assign_stmt():
     def process(parsed):
@@ -74,17 +76,23 @@ def while_stmt():
 
 def function_call_stmt():
     def process(parsed):
-        (name) = parsed
-        return FunctionCallStatement(name)
+        (func) = parsed
+        return FunctionCallStatement(func)
     return aexp() ^ process
 
 def function_stmt():
     def process(parsed):
-        ((((_, name), _), body), _) = parsed
-        return FunctionStatement(name, body)
+        ((((_, func), _), body), _) = parsed
+        return FunctionStatement(func, body)
     return keyword('function') + aexp() + \
            keyword('do') + Lazy(stmt_list) + \
            keyword('end') ^ process
+
+def return_stmt():
+    def process(parsed):
+        (_, name) = parsed
+        return ReturnStatement(name)
+    return keyword('return') + aexp() ^ process
 
 # Boolean expressions
 def bexp():
@@ -127,7 +135,8 @@ def aexp_value():
            (index ^ (lambda i: IndexAexp(i))) | \
            (new_list ^ (lambda l: ListAexp(l))) | \
            (new_map ^ (lambda m: MapAexp(m))) | \
-           (new_func ^ (lambda f: FuncAexp(f)))     
+           (new_func ^ (lambda f: FuncAexp(f))) | \
+           (nil ^ (lambda n: NullAexp(n)))
 
 # An RIG-specific combinator for binary operator expressions (aexp and bexp)
 def precedence(value_parser, precedence_levels, combine):

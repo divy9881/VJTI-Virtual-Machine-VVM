@@ -1,6 +1,7 @@
 import unittest
 from ..rigidity_lexer import *
 from ..rigidity_parser import *
+from ..rig_ast import *
 
 class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):
@@ -10,7 +11,8 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        program.eval(env, 0)
+        stack = []
+        program.eval(env, stack, 0)
         self.assertEqual(expected_env, env)
 
     def error_test(self, code, expected_error):
@@ -20,7 +22,8 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        self.assertRaises(expected_error, lambda: program.eval(env, 0))
+        stack = []
+        self.assertRaises(expected_error, lambda: program.eval(env, stack, 0))
 
     def test_assign(self):
         self.program_test('x := 1', {'x': [1, 0]})
@@ -120,7 +123,7 @@ class TestEvaluation(unittest.TestCase):
             a := n['test']
             ''',
             {'n': [{1: 1, 1.2: 1.2, 'test': 'test'}, 0], 'a': ['test', 0]}
-        )         
+        )        
 
     def test_scope_error(self):
         self.error_test(

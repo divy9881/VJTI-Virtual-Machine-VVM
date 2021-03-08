@@ -1,4 +1,5 @@
 from .equality import *
+import sys
 
 class Statement(Equality):
     pass
@@ -9,6 +10,14 @@ class Aexp(Equality):
 class Bexp(Equality):
     pass
 
+class Routine:
+    def __init__(self, params, body):
+        self.params = params
+        self.body = body
+
+    def __repr__(self):
+        return 'Routine(%s, %s)' % (self.params, self.body)
+
 # Assignment statement
 class AssignStatement(Statement):
     def __init__(self, name, aexp):
@@ -18,8 +27,8 @@ class AssignStatement(Statement):
     def __repr__(self):
         return 'AssignStatement(%s, %s)' % (self.name, self.aexp)
 
-    def eval(self, env, scope):
-        value = self.aexp.eval(env, scope)
+    def eval(self, env, stack, scope):
+        value = self.aexp.eval(env, stack, scope)
         # Here if the name exists then we only change the value and no the scope
         # If not present we create a new entry
         
@@ -62,9 +71,13 @@ class CompoundStatement(Statement):
     def __repr__(self):
         return 'CompoundStatement(%s, %s)' % (self.first, self.second)
 
-    def eval(self, env, scope):
-        self.first.eval(env, scope)
-        self.second.eval(env, scope)
+    def eval(self, env, stack, scope):
+        x = self.first.eval(env, stack, scope)
+        y = self.second.eval(env, stack, scope)
+        if x != None:
+            return x
+        if y != None:
+            return y
 
 # If statement
 class IfStatement(Statement):
@@ -76,13 +89,17 @@ class IfStatement(Statement):
     def __repr__(self):
         return 'IfStatement(%s, %s, %s)' % (self.condition, self.true_stmt, self.false_stmt)
 
-    def eval(self, env, scope):
-        condition_value = self.condition.eval(env, scope)
+    def eval(self, env, stack, scope):
+        condition_value = self.condition.eval(env, stack, scope)
         if condition_value:
-            self.true_stmt.eval(env, scope + 1)
+            x = self.true_stmt.eval(env, stack, scope + 1)
+            if x != None:
+                return x
         else:
             if self.false_stmt:
-                self.false_stmt.eval(env, scope + 1)
+                x = self.false_stmt.eval(env, stack, scope + 1)
+                if x != None:
+                    return x
         
         # This loop add names of variable that were declared in if statement
         names_to_be_removed = []
@@ -103,11 +120,13 @@ class WhileStatement(Statement):
     def __repr__(self):
         return 'WhileStatement(%s, %s)' % (self.condition, self.body)
 
-    def eval(self, env, scope):
-        condition_value = self.condition.eval(env, scope)
+    def eval(self, env, stack, scope):
+        condition_value = self.condition.eval(env, stack, scope)
         while condition_value:
-            self.body.eval(env, scope + 1)
-            condition_value = self.condition.eval(env, scope)
+            x = self.body.eval(env, stack, scope + 1)
+            if x != None:
+                return x
+            condition_value = self.condition.eval(env, stack, scope)
 
         # This loop add names of variable that were declared in while statement
         names_to_be_removed = []
@@ -121,36 +140,52 @@ class WhileStatement(Statement):
 
 # Function Statement
 class FunctionStatement(Statement):
-    def __init__(self, name, body):
+    def __init__(self, func, body):
         # print("Name : ", name)
         # print(type(name))
         # print("Body : ", body)
         # print(type(body))
         # print(type(repr(name)))
-        self.name = repr(name)[repr(name).index('(') + 1 : repr(name).index(')')]
+        self.name = func.name
+        self.params = [x[0] for x in func.params]
         self.body = body
 
     def __repr__(self):
-        return 'FunctionStatement(%s, %s)' % (self.name, self.body)
+        return 'FunctionStatement(%s, %s, %s)' % (self.name, self.params, self.body)
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         if self.name in env:
             raise NameError("Function Already Exists!!!")
         else:
-            env[self.name] = list((self.body, scope))      
+            env[self.name] = list((Routine(self.params, self.body), scope))      
 
 # Function Call Statement
 class FunctionCallStatement(Statement):
-    def __init__(self, name):
-        # print("Name : ", name)
-        # print(type(name))
-        self.name = name
+    def __init__(self, func):
+        # print("Name : ", func)
+        # print(type(func))
+        self.func = func
 
     def __repr__(self):
-        return 'FunctionCallStatement(%s)' % (self.name)
+        return 'FunctionCallStatement(%s)' % (self.func)
 
-    def eval(self, env, scope):
-        self.name.eval(env, scope)     
+    def eval(self, env, stack, scope):
+        x = self.func.eval(env, stack, scope)
+        if x != None:
+            return x     
+
+# Return Statement
+class ReturnStatement(Statement):
+    def __init__(self, aexp):
+        # print("Name : ", func)
+        # print(type(func))
+        self.aexp = aexp
+
+    def __repr__(self):
+        return 'ReturnStatement(%s)' % (self.aexp)
+
+    def eval(self, env, stack, scope):
+        return self.aexp.eval(env, stack, scope)     
 
 # Integer arithmetic expression
 class IntAexp(Aexp):
@@ -160,7 +195,7 @@ class IntAexp(Aexp):
     def __repr__(self):
         return 'IntAexp(%d)' % self.i
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         return self.i
 
 # Float arithmetic expression
@@ -171,7 +206,7 @@ class FloatAexp(Aexp):
     def __repr__(self):
         return 'FloatAexp(%f)' % self.f
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         return self.f
 
 # Integer arithmetic expression
@@ -182,7 +217,7 @@ class StringAexp(Aexp):
     def __repr__(self):
         return 'StringAexp(%s)' % self.s
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         return self.s
 
 # List expression returning list of elements
@@ -193,7 +228,7 @@ class ListAexp(Aexp):
     def __repr__(self):
         return 'ListAexp(%s)' % self.l
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         return self.l
 
 # Map expression returning empty dictionary
@@ -204,7 +239,7 @@ class MapAexp(Aexp):
     def __repr__(self):
         return 'MapAexp(%s)' % self.m
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         return self.m
 
 # Variable arithmetic expression
@@ -215,7 +250,7 @@ class VarAexp(Aexp):
     def __repr__(self):
         return 'VarAexp(%s)' % self.name
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         if self.name in env:
             return env[self.name][0]
             # Here I am returning only the value of variable and not its scope
@@ -224,28 +259,72 @@ class VarAexp(Aexp):
 
 # Function name expression
 class FuncAexp(Aexp):
-    def __init__(self, name):
-        self.name = name[:name.index('(')].strip()
+    def __init__(self, func):
+        self.name = func[0]
+        self.params = func[1]
 
     def __repr__(self):
-        return 'FuncAexp(%s)' % self.name
+        return 'FuncAexp(%s, %s)' % (self.name, str(self.params))
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         if self.name in env:
-            env[self.name][0].eval(env, scope + 1)
+            new_env = {}
+
+            for name in env:
+                if isinstance(env[name][0], Routine):
+                    if self.name == name:
+                        for i in range(len(env[name][0].params)):
+                            if type(self.params[i]) == list:
+                                new_env[env[name][0].params[i]] = list((env[self.params[i][0]][0], scope))
+                            else:    
+                                new_env[env[name][0].params[i]] = list((self.params[i], scope))
+                    new_env[name] = env[name]
+
+            # print("Env : ", env)
+            
+            # print()
+            stack.append(new_env)
+            x = env[self.name][0].body.eval(new_env, stack, scope)
+            if x != None:
+
+                # sys.stdout.write('Final variable values in function :\n')
+                # for name in new_env:
+                #     # print(type(new_env[name][0]))
+                #     sys.stdout.write('%s: %s\n' % (name, new_env[name][0]))
+                
+                # print("New Env : ", new_env)
+                stack.pop()
+                return x
+
+            # sys.stdout.write('Final variable values in function :\n')
+            # for name in new_env:
+            #     # print(type(new_env[name][0]))
+            #     sys.stdout.write('%s: %s\n' % (name, new_env[name][0]))
+
+            stack.pop()
         else:
             raise NameError("No function found")
         
-        # This loop add names of variable that were declared in while statement
-        names_to_be_removed = []
-        for name in env:
-            if env[name][1] > scope:
-                names_to_be_removed.append(name)
+        # This loop add names of variable that were declared in function statement
+        # names_to_be_removed = []
+        # for name in env:
+        #     if env[name][1] > scope:
+        #         names_to_be_removed.append(name)
         
-        # This loop removes the names from env
-        for name in names_to_be_removed:
-            env.pop(name) 
+        # # This loop removes the names from env
+        # for name in names_to_be_removed:
+        #     env.pop(name) 
 
+# Null expression
+class NullAexp(Aexp):
+    def __init__(self, n):
+        self.n = n
+
+    def __repr__(self):
+        return 'NullAexp(%s)' % self.n
+
+    def eval(self, env, stack, scope):
+        return None
 
 # Indexing expression for any iterable
 class IndexAexp(Aexp):
@@ -256,7 +335,7 @@ class IndexAexp(Aexp):
     def __repr__(self):
         return 'IndexAexp(%s, %s)' % (self.name, self.i)
 
-    def eval(self, env, scope):
+    def eval(self, env, stack, scope):
         if self.name in env:
             if type(env[self.name][0]) == str or type(env[self.name][0]) == list:
                 if self.i.isnumeric():
@@ -311,9 +390,9 @@ class BinopAexp(Aexp):
     def __repr__(self):
         return 'BinopAexp(%s, %s, %s)' % (self.op, self.left, self.right)
 
-    def eval(self, env, scope):
-        left_value = self.left.eval(env, scope)
-        right_value = self.right.eval(env, scope)
+    def eval(self, env, stack, scope):
+        left_value = self.left.eval(env, stack, scope)
+        right_value = self.right.eval(env, stack, scope)
         if self.op == '+':
             value = left_value + right_value
         elif self.op == '-':
@@ -336,9 +415,9 @@ class RelopBexp(Bexp):
     def __repr__(self):
         return 'RelopBexp(%s, %s, %s)' % (self.op, self.left, self.right)
 
-    def eval(self, env, scope):
-        left_value = self.left.eval(env, scope)
-        right_value = self.right.eval(env, scope)
+    def eval(self, env, stack, scope):
+        left_value = self.left.eval(env, stack, scope)
+        right_value = self.right.eval(env, stack, scope)
         if self.op == '<':
             value = left_value < right_value
         elif self.op == '<=':
@@ -364,9 +443,9 @@ class AndBexp(Bexp):
     def __repr__(self):
         return 'AndBexp(%s, %s)' % (self.left, self.right)
 
-    def eval(self, env, scope):
-        left_value = self.left.eval(env, scope)
-        right_value = self.right.eval(env, scope)
+    def eval(self, env, stack, scope):
+        left_value = self.left.eval(env, stack, scope)
+        right_value = self.right.eval(env, stack, scope)
         return left_value and right_value
 
 # OR operation boolean expression
@@ -378,9 +457,9 @@ class OrBexp(Bexp):
     def __repr__(self):
         return 'OrBexp(%s, %s)' % (self.left, self.right)
 
-    def eval(self, env, scope):
-        left_value = self.left.eval(env, scope)
-        right_value = self.right.eval(env, scope)
+    def eval(self, env, stack, scope):
+        left_value = self.left.eval(env, stack, scope)
+        right_value = self.right.eval(env, stack, scope)
         return left_value or right_value
 
 # NOT operation boolean expression
@@ -391,6 +470,6 @@ class NotBexp(Bexp):
     def __repr__(self):
         return 'NotBexp(%s)' % self.exp
 
-    def eval(self, env, scope):
-        value = self.exp.eval(env, scope)
+    def eval(self, env, stack, scope):
+        value = self.exp.eval(env, stack, scope)
         return not value

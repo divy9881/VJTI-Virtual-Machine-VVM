@@ -1,11 +1,5 @@
-n := 2;
-factorial := 11.0;
-str := 'test';
-while n > 0 do
-  factorial := factorial * n;
-  n := n - 1
+function a(n) do
+  b := n + 1;
+  return b
 end;
-function a() do
-  n := 10
-end;
-a()
+val := a(5)

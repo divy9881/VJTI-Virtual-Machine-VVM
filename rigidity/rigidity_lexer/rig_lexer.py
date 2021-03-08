@@ -10,6 +10,7 @@ INDEX    = 'INDEX'
 LIST     = 'LIST'
 MAP      = 'MAP'
 FUNC     = 'FUNC'
+NULL     = 'NULL'
 
 token_exprs = [
     (r'\n',                                            None),
@@ -33,20 +34,21 @@ token_exprs = [
     (r'!=',                                            RESERVED),
     (r'=',                                             RESERVED),
     (r'[A-Za-z][A-Za-z0-9_]*\[[A-Za-z0-9_.\']+\]',     INDEX),
-    (r'\[',                                            LIST),
+    (r'\[',                                            RESERVED),
     (r'\,',                                            RESERVED),
-    (r'\]',                                            LIST),
+    (r'\]',                                            RESERVED),
     (r'{}',                                            MAP),
     (r'\'[A-Za-z][A-Za-z]*\'',                         STRING),
     (r'[0-9]+\.[0-9]+',                                FLOAT),
     (r'[0-9]+',                                        INT),
-    (r'[A-Za-z][A-Za-z0-9_]*\(\)',                     FUNC),
+    (r'null',                                          NULL),
     (r'[A-Za-z][A-Za-z0-9_]*',                         ID),
 ]
 
-reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end', 'function']
+reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end', 'function', 'return']
 comment_tokens = ['//', '/*', '*/']
 list_tokens = ['[', ']']
+function_tokens = ['(', ')']
 
 def rig_lex(characters):
     return lex(characters, token_exprs, reserved_keywords, RESERVED)
