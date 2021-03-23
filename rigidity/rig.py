@@ -26,12 +26,12 @@ if __name__ == '__main__':
     # print(parse_result)
     ast = parse_result.value
     env = {}
-    stack = []
+
     # print(ast)
-    ast.eval(env, stack, 0)
+    ast.eval(env, dict(), 0)
     # Here 0 represents the current scope for variables
     
     sys.stdout.write('Final variable values:\n')
     for name in env:
         # print(type(env[name][0]))
-        sys.stdout.write('%s: %s\n' % (name, env[name][0]))
+        sys.stdout.write('%s: %s\n' % (name, env[name]))

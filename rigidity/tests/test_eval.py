@@ -11,8 +11,7 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        stack = []
-        program.eval(env, stack, 0)
+        program.eval(env, dict(), 0)
         self.assertEqual(expected_env, env)
 
     def error_test(self, code, expected_error):
@@ -22,14 +21,13 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        stack = []
-        self.assertRaises(expected_error, lambda: program.eval(env, stack, 0))
+        self.assertRaises(expected_error, lambda: program.eval(env, dict(), 0))
 
     def test_assign(self):
-        self.program_test('x := 1', {'x': [1, 0]})
+        self.program_test('x := 1', {'x': 1})
 
     def test_compound(self):
-        self.program_test('x := 1; y := 2', {'x': [1, 0], 'y': [2, 0]})
+        self.program_test('x := 1; y := 2', {'x': 1, 'y': 2})
 
     def test_if(self):
         self.program_test('if 1 < 2 then x := 1 else x := 2 end', {})
@@ -41,7 +39,7 @@ class TestEvaluation(unittest.TestCase):
             // y := 2;
             z := 3
             ''',
-            {'x': [1, 0], 'z': [3, 0]}
+            {'x': 1, 'z': 3}
         )
 
     def test_multi_line_comment(self):
@@ -53,7 +51,7 @@ class TestEvaluation(unittest.TestCase):
             z := 3
             */
             ''',
-            {'x': [1, 0]}
+            {'x': 1}
         )
 
     def test_int_float_string(self):
@@ -63,7 +61,7 @@ class TestEvaluation(unittest.TestCase):
             factorial := 1.0;
             str := 'test'
             ''',
-            {'n': [5, 0], 'factorial': [1.0, 0], 'str': ['test', 0]}
+            {'n': 5, 'factorial': 1.0, 'str': 'test'}
         )
 
     def test_indexing_int_string(self):
@@ -72,7 +70,7 @@ class TestEvaluation(unittest.TestCase):
             str := 'test';
             s := str[0]
             ''',
-            {'str': ['test', 0], 's': ['t', 0]}
+            {'str': 'test', 's': 't'}
         )
 
     def test_indexing_variable_string(self):
@@ -82,7 +80,7 @@ class TestEvaluation(unittest.TestCase):
             str := 'test';
             s := str[n]
             ''',
-            {'n': [1, 0], 'str': ['test', 0], 's': ['e', 0]}
+            {'n': 1, 'str': 'test', 's': 'e'}
         )
 
     def test_list(self):
@@ -90,7 +88,7 @@ class TestEvaluation(unittest.TestCase):
             '''
             n := [1,1.0,'test']
             ''',
-            {'n': [[1,1.0,'test'], 0]}
+            {'n': [1,1.0,'test']}
         )
 
     def test_list_indexing(self):
@@ -99,8 +97,8 @@ class TestEvaluation(unittest.TestCase):
             n := [1,2];
             a := n[0]
             ''',
-            {'n': [[1,2], 0], 'a': [1, 0]}
-        )                     
+            {'n': [1,2], 'a': 1}
+        )
 
     def test_map(self):
         self.program_test(
@@ -110,7 +108,7 @@ class TestEvaluation(unittest.TestCase):
             n[1.2] := 1.2;
             n['test'] := 'test'
             ''',
-            {'n': [{1: 1, 1.2: 1.2, 'test': 'test'}, 0]}
+            {'n': {1: 1, 1.2: 1.2, 'test': 'test'}}
         )     
 
     def test_map_indexing(self):
@@ -122,7 +120,7 @@ class TestEvaluation(unittest.TestCase):
             n['test'] := 'test';
             a := n['test']
             ''',
-            {'n': [{1: 1, 1.2: 1.2, 'test': 'test'}, 0], 'a': ['test', 0]}
+            {'n': {1: 1, 1.2: 1.2, 'test': 'test'}, 'a': 'test'}
         )        
 
     def test_scope_error(self):

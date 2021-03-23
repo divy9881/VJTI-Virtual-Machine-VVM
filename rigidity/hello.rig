@@ -1,5 +1,11 @@
-function a(n) do
-  b := n + 1;
-  return b
+function fact(n) do
+  if n = 0 then
+    return 1
+  else
+    d := n-1;
+    b := fact(d);
+    c := b * n;
+    return c
+  end
 end;
-val := a(5)
+val := fact(10)
