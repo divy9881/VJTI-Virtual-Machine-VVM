@@ -9,10 +9,11 @@ class VM:
         self.send_amount = send_amount
 
     def run_function(self, contract_code: str, function_name: str, params_stringified_json: list):
-        contract_code.strip('\n ')
+        if function_name != "main":
+            contract_code.strip('\n ')
 
-        contract_code += ';'
-        contract_code += 'contract_function_result := ' + function_name + '(' + params_stringified_json.join(',') + ')'
+            contract_code += ';'
+            contract_code += 'contract_function_result := ' + function_name + '(' + params_stringified_json.join(',') + ')'
 
         tokens = rig_lex(contract_code)
 
@@ -24,6 +25,7 @@ class VM:
 
         parse_result = rig_parse(optimized_tokens)
         if not parse_result:
+     
             sys.stderr.write('Parse error!\n')
             sys.exit(1)
 
@@ -32,6 +34,10 @@ class VM:
         env = {}
 
         # print(ast)
-        ast.eval(env, dict(), 0)
+        eval_result = ast.eval(env, dict(), 0)
+        
+        if function_name == "main":
+            return str(eval_result)
+        else:
+            return str(env['contract_function_result'])
 
-        return env['contract_function_result']

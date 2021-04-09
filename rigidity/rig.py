@@ -28,9 +28,10 @@ if __name__ == '__main__':
     env = {}
 
     # print(ast)
-    ast.eval(env, dict(), 0)
+    ans = ast.eval(env, dict(), 0)
     # Here 0 represents the current scope for variables
-    
+    print(ans)
+
     sys.stdout.write('Final variable values:\n')
     for name in env:
         # print(type(env[name][0]))
