@@ -7,6 +7,23 @@ def usage():
     sys.stderr.write('Usage: rig filename\n')
     sys.exit(1)
 
+def read_contract_output(contract_id: str):
+    print("Contract ID: ", contract_id)
+    return contract_id
+
+def call_contract_function(contract_id: str, function_name, params):
+    print("Contract ID: ", contract_id)
+    print("Function Name: ", function_name)
+    print("Params: ", params)
+    return function_name
+
+def send_amount(receiver_address: str, amount, message):
+    print("Address: ", receiver_address)
+    print("Amount: ", amount)
+    print("Meesage: ", message)
+    return message
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         usage()
@@ -28,9 +45,9 @@ if __name__ == '__main__':
     env = {}
 
     # print(ast)
-    ans = ast.eval(env, dict(), 0)
+    ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)
     # Here 0 represents the current scope for variables
-    print(ans)
+    # print(ans)
 
     sys.stdout.write('Final variable values:\n')
     for name in env:

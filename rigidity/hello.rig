@@ -3,4 +3,5 @@ function a(n) do
   return b
 end;
 val := a(5);
-return val
+ab := 'DIVY';
+print(1, ab)

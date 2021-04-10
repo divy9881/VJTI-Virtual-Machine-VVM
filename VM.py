@@ -34,7 +34,7 @@ class VM:
         env = {}
 
         # print(ast)
-        eval_result = ast.eval(env, dict(), 0)
+        eval_result = ast.eval(env, dict(), 0, self.read_contract_output, self.call_contract_function, self.send_amount)
         
         if function_name == "main":
             return str(eval_result)
