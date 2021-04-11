@@ -1,0 +1,6 @@
+function a(n) do
+  b := n + 1;
+  return b
+end;
+val := a(5);
+return val
