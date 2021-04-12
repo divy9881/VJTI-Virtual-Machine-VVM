@@ -3,6 +3,16 @@ from ..rigidity_lexer import *
 from ..rigidity_parser import *
 from ..rig_ast import *
 
+def read_contract_output(contract_id: str):
+    pass
+
+def call_contract_function(contract_id: str, function_name: str, params: list):
+    pass
+
+def send_amount(receiver_address: str, amount: float, message: str):
+    pass
+
+
 class TestEvaluation(unittest.TestCase):
     def program_test(self, code, expected_env):
         tokens = rig_lex(code)
@@ -11,7 +21,7 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        program.eval(env, dict(), 0)
+        program.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)
         self.assertEqual(expected_env, env)
 
     def error_test(self, code, expected_error):
@@ -21,7 +31,7 @@ class TestEvaluation(unittest.TestCase):
         self.assertNotEqual(None, result)
         program = result.value
         env = {}
-        self.assertRaises(expected_error, lambda: program.eval(env, dict(), 0))
+        self.assertRaises(expected_error, lambda: program.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount))
 
     def test_assign(self):
         self.program_test('x := 1', {'x': 1})
