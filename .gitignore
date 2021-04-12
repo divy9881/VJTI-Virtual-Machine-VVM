@@ -1,3 +1,5 @@
+__pycache__
+
 rigidity/__pycache__/
 rigidity/**/__pycache__/
 rigidity/test.py

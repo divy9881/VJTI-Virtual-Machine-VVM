@@ -1,6 +1,7 @@
 import sys
-from rigidity.rigidity_lexer import *
-from rigidity.rigidity_parser import *
+from typing import List, Any
+from .rigidity.rigidity_lexer import *
+from .rigidity.rigidity_parser import *
 
 class VM:
     def __init__(self, read_contract_output, call_contract_function, send_amount):
@@ -8,10 +9,22 @@ class VM:
         self.call_contract_function = call_contract_function
         self.send_amount = send_amount
 
-    def run_function(self, contract_code: str, function_name: str, params_stringified_json: list):
+    def run_function(self, contract_code: str, function_name: str, params_list: List[Any]):
         contract_code.strip('\n ')
         contract_code += ';'
-        contract_code += 'contract_function_result := ' + function_name + '(' + ','.join(params_stringified_json) + ')'
+        print(params_list)
+        params = ""
+        for p in params_list:
+            if type(p) == int:
+                params += f"{p}, "
+            elif type(p) == str:
+                params += f"'{p}', "
+            elif type(p) == float:
+                params += f"{p}, "
+        if len(params) > 0:
+            params = params[:-2]
+        print(params)
+        contract_code += 'contract_function_result := ' + function_name + '(' + params + ')'
 
         tokens = rig_lex(contract_code)
 
