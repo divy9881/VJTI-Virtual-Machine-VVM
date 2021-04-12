@@ -1,0 +1,4 @@
+function main() do
+  val := read_contract_output('18154c0c-bb62-4fcc-9369-1f10118d2d5e');
+  return val
+end
