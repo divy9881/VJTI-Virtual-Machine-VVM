@@ -11,13 +11,13 @@ def read_contract_output(contract_id: str):
     print("Contract ID: ", contract_id)
     return contract_id
 
-def call_contract_function(contract_id: str, function_name, params):
+def call_contract_function(contract_id: str, function_name: str, params: list):
     print("Contract ID: ", contract_id)
     print("Function Name: ", function_name)
     print("Params: ", params)
     return function_name
 
-def send_amount(receiver_address: str, amount, message):
+def send_amount(receiver_address: str, amount: float, message: str):
     print("Address: ", receiver_address)
     print("Amount: ", amount)
     print("Meesage: ", message)

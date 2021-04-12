@@ -38,7 +38,7 @@ token_exprs = [
     (r'\,',                                            RESERVED),
     (r'\]',                                            RESERVED),
     (r'{}',                                            MAP),
-    (r'\'[A-Za-z][A-Za-z]*\'',                         STRING),
+    (r'\'[A-Za-z0-9_-][A-Za-z0-9_-]*\'',               STRING),
     (r'[0-9]+\.[0-9]+',                                FLOAT),
     (r'[0-9]+',                                        INT),
     (r'null',                                          NULL),

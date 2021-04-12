@@ -9,11 +9,9 @@ class VM:
         self.send_amount = send_amount
 
     def run_function(self, contract_code: str, function_name: str, params_stringified_json: list):
-        if function_name != "main":
-            contract_code.strip('\n ')
-
-            contract_code += ';'
-            contract_code += 'contract_function_result := ' + function_name + '(' + params_stringified_json.join(',') + ')'
+        contract_code.strip('\n ')
+        contract_code += ';'
+        contract_code += 'contract_function_result := ' + function_name + '(' + ','.join(params_stringified_json) + ')'
 
         tokens = rig_lex(contract_code)
 
@@ -34,10 +32,7 @@ class VM:
         env = {}
 
         # print(ast)
-        eval_result = ast.eval(env, dict(), 0, self.read_contract_output, self.call_contract_function, self.send_amount)
+        ast.eval(env, dict(), 0, self.read_contract_output, self.call_contract_function, self.send_amount)
         
-        if function_name == "main":
-            return str(eval_result)
-        else:
-            return str(env['contract_function_result'])
+        return str(env['contract_function_result'])
 

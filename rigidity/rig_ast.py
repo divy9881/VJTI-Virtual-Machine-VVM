@@ -1,6 +1,15 @@
 from .equality import *
 import sys
 
+def check(params, env):
+    for i in range(0, len(params)):
+        if type(params[i]) == list:
+            if params[i][0] in env:
+                params[i] = env[params[i][0]]
+            else:
+                raise NameError("Identifier not found")
+    return params
+
 class Statement(Equality):
     pass
 
@@ -292,22 +301,17 @@ class FuncAexp(Aexp):
 
     def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
         if self.name == "read_contract_output":
+            self.params = check(self.params, env)
             return read_contract_output(self.params[0])
         elif self.name == "call_contract_function":
-            if self.params[2][0] in env:
-                return call_contract_function(self.params[0], self.params[1], env[self.params[2][0]])
-            else:
-                raise NameError("No Params found")
+            self.params = check(self.params, env)
+            return call_contract_function(self.params[0], self.params[1], self.params[2])
         elif self.name == "send_amount":
+            self.params = check(self.params, env)
             return send_amount(self.params[0], self.params[1], self.params[2])
         elif self.name == "print":
-            p = []
-            for x in self.params:
-                if type(x) != list:
-                    p.append(x)
-                else:
-                    p.append(env[x[0]])
-            print(*p)
+            self.params = check(self.params, env)
+            print(*self.params)
         elif self.name in env:
             new_env = {}
             new_scope_map = {}

@@ -1,9 +1,9 @@
-n := 5;
-factorial := 1;
-while n > 0 do
-  factorial := factorial * n;
-  n := n - 1
-  // k := n + 1
-end;
-// bot := k + 1
-return factorial
+function main() do
+  n := 5;
+  factorial := 1;
+  while n > 0 do
+    factorial := factorial * n;
+    n := n - 1
+  end;
+  return factorial
+end
