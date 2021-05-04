@@ -2,6 +2,8 @@
 import sys
 from .rigidity_lexer import *
 from .rigidity_parser import *
+import multiprocessing
+import time
 
 def usage():
     sys.stderr.write('Usage: rig filename\n')
@@ -23,6 +25,15 @@ def send_amount(receiver_address: str, amount: float, message: str):
     print("Meesage: ", message)
     return message
 
+def eval(ast, env, read_contract_output, call_contract_function, send_amount, return_dict):
+    ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)   
+
+    sys.stdout.write('Final variable values:\n')
+    for name in env:
+        # print(type(env[name][0]))
+        sys.stdout.write('%s: %s\n' % (name, env[name]))
+
+    return_dict[0] = ans
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -44,12 +55,21 @@ if __name__ == '__main__':
     ast = parse_result.value
     env = {}
 
-    # print(ast)
-    ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)
-    # Here 0 represents the current scope for variables
-    # print(ans)
+    manager = multiprocessing.Manager()
+    return_dict = manager.dict()
+    p = multiprocessing.Process(target=eval, args=(ast, env, read_contract_output, call_contract_function, send_amount, return_dict))
+    p.start()
 
-    sys.stdout.write('Final variable values:\n')
-    for name in env:
-        # print(type(env[name][0]))
-        sys.stdout.write('%s: %s\n' % (name, env[name]))
+    # Wait for 3 seconds or until process finishes
+    p.join(3)
+
+    # If thread is still active
+    if p.is_alive():
+
+        p.terminate()
+
+        p.join()
+
+        raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
+
+    print(return_dict[0])

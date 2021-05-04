@@ -2,6 +2,8 @@ import sys
 from typing import List, Any
 from .rigidity.rigidity_lexer import *
 from .rigidity.rigidity_parser import *
+import multiprocessing
+import time
 
 class VM:
     def __init__(self, read_contract_output, call_contract_function, send_amount):
@@ -9,10 +11,14 @@ class VM:
         self.call_contract_function = call_contract_function
         self.send_amount = send_amount
 
+    def eval(self, ast, env, read_contract_output, call_contract_function, send_amount, return_dict):
+        ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)   
+        return_dict[0] = str(env['contract_function_result'])
+
     def run_function(self, contract_code: str, function_name: str, params_list: List[Any]):
         contract_code.strip('\n ')
         contract_code += ';'
-        print(params_list)
+        # print(params_list)
         params = ""
         for p in params_list:
             if type(p) == int:
@@ -23,7 +29,7 @@ class VM:
                 params += f"{p}, "
         if len(params) > 0:
             params = params[:-2]
-        print(params)
+        # print(params)
         contract_code += 'contract_function_result := ' + function_name + '(' + params + ')'
 
         tokens = rig_lex(contract_code)
@@ -44,8 +50,22 @@ class VM:
         ast = parse_result.value
         env = {}
 
-        # print(ast)
-        ast.eval(env, dict(), 0, self.read_contract_output, self.call_contract_function, self.send_amount)
-        
-        return str(env['contract_function_result'])
+        manager = multiprocessing.Manager()
+        return_dict = manager.dict()
+        p = multiprocessing.Process(target=eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
+        p.start()
+
+        # Wait for 3 seconds or until process finishes
+        p.join(3)
+
+        # If thread is still active
+        if p.is_alive():
+
+            p.terminate()
+
+            p.join()
+
+            raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
+
+        return return_dict[0]
 

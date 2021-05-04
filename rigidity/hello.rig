@@ -6,4 +6,5 @@ function main() do
   val := a(5);
   return val
 end;
-result := main()
+result := main();
+return result
