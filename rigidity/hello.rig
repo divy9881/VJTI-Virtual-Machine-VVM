@@ -1,1 +1,8 @@
-a := "a"
+function a(n) do
+  b := n + 1;
+  return b
+end;
+function main() do
+  val := a(5);
+  return val
+end

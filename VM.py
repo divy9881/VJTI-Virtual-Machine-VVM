@@ -51,7 +51,7 @@ class VM:
         manager = multiprocessing.Manager()
         return_dict = manager.dict()
         try:
-            p = multiprocessing.Process(target=eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
+            p = multiprocessing.Process(target=self.eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
             p.start()
 
             # Wait for 3 seconds or until process finishes
