@@ -6,8 +6,7 @@ import multiprocessing
 import time
 
 def usage():
-    sys.stderr.write('Usage: rig filename\n')
-    sys.exit(1)
+    raise Exception('Usage: rig filename\n')
 
 def read_contract_output(contract_id: str):
     print("Contract ID: ", contract_id)
@@ -26,6 +25,7 @@ def send_amount(receiver_address: str, amount: float, message: str):
     return message
 
 def eval(ast, env, read_contract_output, call_contract_function, send_amount, return_dict):
+    # try:
     ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)   
 
     sys.stdout.write('Final variable values:\n')
@@ -34,6 +34,10 @@ def eval(ast, env, read_contract_output, call_contract_function, send_amount, re
         sys.stdout.write('%s: %s\n' % (name, env[name]))
 
     return_dict[0] = ans
+    # except Exception as e:
+    #     print(e)
+    #     print("in 1")
+    #     raise e
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -44,12 +48,10 @@ if __name__ == '__main__':
     optimized_tokens = optimize_tokens(tokens)
     # print(optimized_tokens)
     if not optimized_tokens:
-        sys.stderr.write('Lex error!\n')
-        sys.exit(1)
+        raise Exception('Lex error!\n')
     parse_result = rig_parse(optimized_tokens)
     if not parse_result:
-        sys.stderr.write('Parse error!\n')
-        sys.exit(1)
+        raise Exception('Parse error!\n')
 
     # print(parse_result)
     ast = parse_result.value
@@ -57,19 +59,24 @@ if __name__ == '__main__':
 
     manager = multiprocessing.Manager()
     return_dict = manager.dict()
-    p = multiprocessing.Process(target=eval, args=(ast, env, read_contract_output, call_contract_function, send_amount, return_dict))
-    p.start()
+    try:
+        p = multiprocessing.Process(target=eval, args=(ast, env, read_contract_output, call_contract_function, send_amount, return_dict))
+        p.start()
 
-    # Wait for 3 seconds or until process finishes
-    p.join(3)
+        # Wait for 3 seconds or until process finishes
+        p.join(3)
 
-    # If thread is still active
-    if p.is_alive():
+        # If thread is still active
+        if p.is_alive():
 
-        p.terminate()
+            p.terminate()
 
-        p.join()
+            p.join()
 
-        raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
+            raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
 
-    print(return_dict[0])
+        print(return_dict[0])
+    except Exception as e:
+        # print(e)
+        print("in 2")
+        # raise Exception(e)

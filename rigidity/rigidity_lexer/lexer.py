@@ -23,8 +23,7 @@ def lex(characters, token_exprs, reserved_keywords, RESERVED):
                     tokens.append(token)
                 break
         if not match:
-            sys.stderr.write('Illegal character: %s\n' % characters[pos])
-            sys.exit(1)
+            raise Exception('Illegal character: %s\n' % characters[pos])
         else:
             pos = match.end(0)
     return tokens

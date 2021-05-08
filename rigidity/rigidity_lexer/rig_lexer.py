@@ -15,7 +15,6 @@ NULL     = 'NULL'
 token_exprs = [
     (r'\n',                                            None),
     (r'[ \t]+',                                        None),
-    # (r'#[^\n]*',                                     None),
     (r'\:=',                                           RESERVED),
     (r'\(',                                            RESERVED),
     (r'\)',                                            RESERVED),
@@ -38,7 +37,7 @@ token_exprs = [
     (r'\,',                                            RESERVED),
     (r'\]',                                            RESERVED),
     (r'{}',                                            MAP),
-    (r'\'[A-Za-z0-9_-][A-Za-z0-9_-]*\'',               STRING),
+    (r'\'[A-Za-z0-9_][A-Za-z0-9+/=_-]*\'',             STRING),
     (r'[0-9]+\.[0-9]+',                                FLOAT),
     (r'[0-9]+',                                        INT),
     (r'null',                                          NULL),

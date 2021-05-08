@@ -4,8 +4,7 @@ from ..rigidity_lexer import *
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        sys.stderr.write('usage: %s filename parsername\n' % sys.argv[0])
-        sys.exit(1)
+        raise Exception('usage: %s filename parsername\n' % sys.argv[0])
     filename = sys.argv[1]
     file = open(filename)
     characters = file.read()

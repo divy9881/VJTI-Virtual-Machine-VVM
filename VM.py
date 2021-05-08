@@ -37,14 +37,12 @@ class VM:
         optimized_tokens = optimize_tokens(tokens)
         # print(optimized_tokens)
         if not optimized_tokens:
-            sys.stderr.write('Lex error!\n')
-            sys.exit(1)
+            raise Exception('Lex error!\n')
 
         parse_result = rig_parse(optimized_tokens)
         if not parse_result:
      
-            sys.stderr.write('Parse error!\n')
-            sys.exit(1)
+            raise Exception('Parse error!\n')
 
         # print(parse_result)
         ast = parse_result.value
@@ -52,20 +50,22 @@ class VM:
 
         manager = multiprocessing.Manager()
         return_dict = manager.dict()
-        p = multiprocessing.Process(target=eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
-        p.start()
+        try:
+            p = multiprocessing.Process(target=eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
+            p.start()
 
-        # Wait for 3 seconds or until process finishes
-        p.join(3)
+            # Wait for 3 seconds or until process finishes
+            p.join(3)
 
-        # If thread is still active
-        if p.is_alive():
+            # If thread is still active
+            if p.is_alive():
 
-            p.terminate()
+                p.terminate()
 
-            p.join()
+                p.join()
 
-            raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
+                raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
 
-        return return_dict[0]
-
+            return return_dict[0]
+        except Exception as e:
+            raise e
