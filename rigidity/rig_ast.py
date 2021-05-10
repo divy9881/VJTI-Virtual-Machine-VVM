@@ -1,5 +1,6 @@
 from .equality import *
 import sys
+import time
 
 def check(params, env):
     for i in range(0, len(params)):
@@ -169,11 +170,6 @@ class WhileStatement(Statement):
 # Function Statement
 class FunctionStatement(Statement):
     def __init__(self, func, body):
-        # print("Name : ", name)
-        # print(type(name))
-        # print("Body : ", body)
-        # print(type(body))
-        # print(type(repr(name)))
         self.name = func.name
         self.params = [x[0] for x in func.params]
         self.body = body
@@ -195,8 +191,6 @@ class FunctionStatement(Statement):
 # Function Call Statement
 class FunctionCallStatement(Statement):
     def __init__(self, func):
-        # print("Name : ", func)
-        # print(type(func))
         self.func = func
 
     def __repr__(self):
@@ -210,8 +204,6 @@ class FunctionCallStatement(Statement):
 # Return Statement
 class ReturnStatement(Statement):
     def __init__(self, aexp):
-        # print("Name : ", func)
-        # print(type(func))
         self.aexp = aexp
 
     def __repr__(self):
@@ -312,6 +304,8 @@ class FuncAexp(Aexp):
         elif self.name == "print":
             self.params = check(self.params, env)
             print(*self.params)
+        elif self.name == "get_time":
+            return time.time()
         elif self.name in env:
             new_env = {}
             new_scope_map = {}

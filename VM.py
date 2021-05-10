@@ -18,7 +18,6 @@ class VM:
     def run_function(self, contract_code: str, function_name: str, params_list: List[Any]):
         contract_code.strip('\n ')
         contract_code += ';'
-        # print(params_list)
         params = ""
         for p in params_list:
             if type(p) == int:
@@ -29,22 +28,17 @@ class VM:
                 params += f"{p}, "
         if len(params) > 0:
             params = params[:-2]
-        # print(params)
         contract_code += 'contract_function_result := ' + function_name + '(' + params + ')'
 
         tokens = rig_lex(contract_code)
-
         optimized_tokens = optimize_tokens(tokens)
-        # print(optimized_tokens)
         if not optimized_tokens:
             raise Exception('Lex error!\n')
 
         parse_result = rig_parse(optimized_tokens)
         if not parse_result:
-     
             raise Exception('Parse error!\n')
 
-        # print(parse_result)
         ast = parse_result.value
         env = {}
 
@@ -59,13 +53,10 @@ class VM:
 
             # If thread is still active
             if p.is_alive():
-
                 p.terminate()
-
                 p.join()
-
                 raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
-
+                
             return return_dict[0]
         except Exception as e:
             raise e

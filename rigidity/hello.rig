@@ -1,8 +1,9 @@
-function a(n) do
-  b := n + 1;
-  return b
+function pay(n) do
+  ok := send_amount('a/b', n, 'Test Transfer');
+  return ok
 end;
 function main() do
-  val := a(5);
-  return val
-end
+  a := get_time();
+  return a
+end;
+ans := main()
