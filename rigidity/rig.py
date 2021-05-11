@@ -8,12 +8,12 @@ import time
 def usage():
     raise Exception('Usage: rig filename\n')
 
-def read_contract_output(contract_id: str):
-    print("Contract ID: ", contract_id)
-    return contract_id
+def read_contract_output(contract_priv_key: str):
+    print("Contract Private Key: ", contract_priv_key)
+    return contract_priv_key
 
-def call_contract_function(contract_id: str, function_name: str, params: list):
-    print("Contract ID: ", contract_id)
+def call_contract_function(contract_priv_key: str, function_name: str, params: list):
+    print("Contract Private Key: ", contract_priv_key)
     print("Function Name: ", function_name)
     print("Params: ", params)
     return function_name

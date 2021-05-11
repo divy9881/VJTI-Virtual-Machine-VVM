@@ -3,10 +3,10 @@ from ..rigidity_lexer import *
 from ..rigidity_parser import *
 from ..rig_ast import *
 
-def read_contract_output(contract_id: str):
+def read_contract_output(contract_priv_key: str):
     pass
 
-def call_contract_function(contract_id: str, function_name: str, params: list):
+def call_contract_function(contract_priv_key: str, function_name: str, params: list):
     pass
 
 def send_amount(receiver_address: str, amount: float, message: str):
