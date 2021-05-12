@@ -1,9 +1,7 @@
-import sys
 from typing import List, Any
 from .rigidity.rigidity_lexer import *
 from .rigidity.rigidity_parser import *
 import multiprocessing
-import time
 
 class VM:
     def __init__(self, read_contract_output, call_contract_function, send_amount):

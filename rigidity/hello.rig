@@ -1,9 +1,5 @@
-function pay(n) do
-  ok := send_amount('a/b', n, 'Test Transfer');
-  return ok
-end;
 function main() do
-  a := get_time();
-  return a
+  b_a := [1.0, 2, 3];
+  return b_a[0]
 end;
 ans := main()

@@ -32,7 +32,7 @@ token_exprs = [
     (r'>',                                             RESERVED),
     (r'!=',                                            RESERVED),
     (r'=',                                             RESERVED),
-    (r'[A-Za-z][A-Za-z0-9_]*\[[A-Za-z0-9_.\']+\]',     INDEX),
+    (r'[A-Za-z_][A-Za-z0-9_]*\[[A-Za-z0-9_.\']+\]',    INDEX),
     (r'\[',                                            RESERVED),
     (r'\,',                                            RESERVED),
     (r'\]',                                            RESERVED),
@@ -41,7 +41,7 @@ token_exprs = [
     (r'[0-9]+\.[0-9]+',                                FLOAT),
     (r'[0-9]+',                                        INT),
     (r'null',                                          NULL),
-    (r'[A-Za-z][A-Za-z0-9_]*',                         ID),
+    (r'[A-Za-z_][A-Za-z0-9_]*',                        ID),
 ]
 
 reserved_keywords = ['and', 'or', 'not', 'if', 'then', 'else', 'while', 'do', 'end', 'function', 'return']

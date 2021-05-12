@@ -1,5 +1,4 @@
 from .equality import *
-import sys
 import time
 
 def check(params, env):
@@ -115,19 +114,6 @@ class IfStatement(Statement):
                 x = self.false_stmt.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount)
                 if x != None:
                     return x
-        
-        # This loop add names of variable that were declared in if statement
-        # names_to_be_removed = []
-        # for name in env:
-        #     if env[name][1] > scope:
-        #         names_to_be_removed.append(name)
-        
-        # This loop removes the names from env
-        # for name in names_to_be_removed:
-        #     env.pop(name)
-
-        # sorted_keys = scope_map.keys().sort()
-        # length = len(sorted_keys)
 
         if scope + 1 in scope_map:
             for i in scope_map[scope+1]:
@@ -151,16 +137,6 @@ class WhileStatement(Statement):
             if x != None:
                 return x
             condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-
-        # This loop add names of variable that were declared in while statement
-        # names_to_be_removed = []
-        # for name in env:
-        #     if env[name][1] > scope:
-        #         names_to_be_removed.append(name)
-        
-        # This loop removes the names from env
-        # for name in names_to_be_removed:
-        #     env.pop(name)        
 
         if scope + 1 in scope_map:
             for i in scope_map[scope+1]:
