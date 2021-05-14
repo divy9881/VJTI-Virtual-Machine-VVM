@@ -287,6 +287,9 @@ class FuncAexp(Aexp):
             self.params = check(self.params, env)
             self.params[0] = self.params[0].replace("\\'", "'")
             return ast.literal_eval(self.params[0])
+        elif self.name == "map_has":
+            self.params = check(self.params, env)
+            return self.params[1] in self.params[0].keys()
         elif self.name in env:
             new_env = {}
             new_scope_map = {}

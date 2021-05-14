@@ -61,10 +61,14 @@ def if_stmt():
         else:
             false_stmt = None
         return IfStatement(condition, true_stmt, false_stmt)
-    return keyword('if') + bexp() + \
+    return (keyword('if') + bexp() + \
            keyword('then') + Lazy(stmt_list) + \
            Opt(keyword('else') + Lazy(stmt_list)) + \
-           keyword('end') ^ process
+           keyword('end') ^ process) | \
+           (keyword('if') + aexp() + \
+           keyword('then') + Lazy(stmt_list) + \
+           Opt(keyword('else') + Lazy(stmt_list)) + \
+           keyword('end') ^ process) 
 
 def while_stmt():
     def process(parsed):
