@@ -1,7 +1,11 @@
+function pay(n) do
+  receiving_account_pub_key := 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEOs9nZhvCnySWEmu9MvwVW+t3nM5T2QEsgcekpb1nQoO4au2XTGPMJf4xI2sBKEF1ToreBK6amX6z35CFQVO+gw==';
+  ok := send_amount(receiving_account_pub_key, n, 'Transfer From Contract');
+  return ok
+end;
 function main() do
-  s := '{1: 1, \'test\': \'test\', 2.0: 2.0}';
-  m := string_to_map(s);
-  return m
+  a := 1;
+  return a
 end;
 ans := main();
 return ans

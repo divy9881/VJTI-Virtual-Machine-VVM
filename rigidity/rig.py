@@ -37,6 +37,7 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     text = open(filename).read()
     tokens = rig_lex(text)
+    print(tokens)
     optimized_tokens = optimize_tokens(tokens)
     if not optimized_tokens:
         raise Exception('Lex error!\n')
