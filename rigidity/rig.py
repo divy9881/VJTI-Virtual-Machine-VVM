@@ -29,7 +29,7 @@ def eval(ast, env, read_contract_output, call_contract_function, send_amount, re
     for name in env:
         sys.stdout.write('%s: %s\n' % (name, env[name]))
 
-    return_dict[0] = ans
+    return_dict[0] = str(ans)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
             raise RuntimeError("Code took more than 3 seconds!!!!!!!!!")
 
-        print(return_dict[0])
+        print("RESULT : ", return_dict[0])
         
     except Exception as e:
         print("in 2")

@@ -1,5 +1,7 @@
 function main() do
-  b_a := [1.0, 2, 3];
-  return b_a[0]
+  s := '{1: 1, \'test\': \'test\', 2.0: 2.0}';
+  m := string_to_map(s);
+  return m
 end;
-ans := main()
+ans := main();
+return ans

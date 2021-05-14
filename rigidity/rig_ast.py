@@ -1,5 +1,6 @@
 from .equality import *
 import time
+import ast
 
 def check(params, env):
     for i in range(0, len(params)):
@@ -282,6 +283,10 @@ class FuncAexp(Aexp):
             print(*self.params)
         elif self.name == "get_time":
             return time.time()
+        elif self.name == "string_to_map":
+            self.params = check(self.params, env)
+            self.params[0] = self.params[0].replace("\\'", "'")
+            return ast.literal_eval(self.params[0])
         elif self.name in env:
             new_env = {}
             new_scope_map = {}
