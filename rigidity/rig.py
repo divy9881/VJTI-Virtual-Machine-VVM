@@ -22,8 +22,12 @@ def send_amount(receiver_address: str, amount: float, message: str):
     print("Meesage: ", message)
     return message
 
-def eval(ast, env, read_contract_output, call_contract_function, send_amount, return_dict):
-    ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)   
+def update_contract_output(output: str):
+    print("Output: ", output)
+    return output
+
+def eval(ast, env, read_contract_output, call_contract_function, send_amount, update_contract_output, return_dict):
+    ans = ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount, update_contract_output)
 
     sys.stdout.write('Final variable values:\n')
     for name in env:
@@ -51,7 +55,7 @@ if __name__ == '__main__':
     manager = multiprocessing.Manager()
     return_dict = manager.dict()
     try:
-        p = multiprocessing.Process(target=eval, args=(ast, env, read_contract_output, call_contract_function, send_amount, return_dict))
+        p = multiprocessing.Process(target=eval, args=(ast, env, read_contract_output, call_contract_function, send_amount, update_contract_output, return_dict))
         p.start()
 
         # Wait for 3 seconds or until process finishes

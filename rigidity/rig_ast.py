@@ -37,8 +37,8 @@ class AssignStatement(Statement):
     def __repr__(self):
         return 'AssignStatement(%s, %s)' % (self.name, self.aexp)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        value = self.aexp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        value = self.aexp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         # Here if the name exists then we only change the value and no the scope
         # If not present we create a new entry
         
@@ -86,9 +86,9 @@ class CompoundStatement(Statement):
     def __repr__(self):
         return 'CompoundStatement(%s, %s)' % (self.first, self.second)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        x = self.first.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-        y = self.second.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        x = self.first.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
+        y = self.second.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         if x != None:
             return x
         if y != None:
@@ -104,15 +104,15 @@ class IfStatement(Statement):
     def __repr__(self):
         return 'IfStatement(%s, %s, %s)' % (self.condition, self.true_stmt, self.false_stmt)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         if condition_value:
-            x = self.true_stmt.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount)
+            x = self.true_stmt.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount, update_contract_output)
             if x != None:
                 return x
         else:
             if self.false_stmt:
-                x = self.false_stmt.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount)
+                x = self.false_stmt.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount, update_contract_output)
                 if x != None:
                     return x
 
@@ -131,13 +131,13 @@ class WhileStatement(Statement):
     def __repr__(self):
         return 'WhileStatement(%s, %s)' % (self.condition, self.body)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         while condition_value:
-            x = self.body.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount)
+            x = self.body.eval(env, scope_map, scope + 1, read_contract_output, call_contract_function, send_amount, update_contract_output)
             if x != None:
                 return x
-            condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+            condition_value = self.condition.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
 
         if scope + 1 in scope_map:
             for i in scope_map[scope+1]:
@@ -154,7 +154,7 @@ class FunctionStatement(Statement):
     def __repr__(self):
         return 'FunctionStatement(%s, %s, %s)' % (self.name, self.params, self.body)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         if self.name in env:
             raise NameError("Function Already Exists!!!")
         else:
@@ -173,8 +173,8 @@ class FunctionCallStatement(Statement):
     def __repr__(self):
         return 'FunctionCallStatement(%s)' % (self.func)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        x = self.func.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        x = self.func.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         if x != None:
             return x
 
@@ -186,8 +186,8 @@ class ReturnStatement(Statement):
     def __repr__(self):
         return 'ReturnStatement(%s)' % (self.aexp)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        return self.aexp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        return self.aexp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
 
 # Integer arithmetic expression
 class IntAexp(Aexp):
@@ -197,7 +197,7 @@ class IntAexp(Aexp):
     def __repr__(self):
         return 'IntAexp(%d)' % self.i
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return self.i
 
 # Float arithmetic expression
@@ -208,7 +208,7 @@ class FloatAexp(Aexp):
     def __repr__(self):
         return 'FloatAexp(%f)' % self.f
 
-    def eval(self, env,scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env,scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return self.f
 
 # Integer arithmetic expression
@@ -219,7 +219,7 @@ class StringAexp(Aexp):
     def __repr__(self):
         return 'StringAexp(%s)' % self.s
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return self.s
 
 # List expression returning list of elements
@@ -230,7 +230,7 @@ class ListAexp(Aexp):
     def __repr__(self):
         return 'ListAexp(%s)' % self.l
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return self.l
 
 # Map expression returning empty dictionary
@@ -241,7 +241,7 @@ class MapAexp(Aexp):
     def __repr__(self):
         return 'MapAexp(%s)' % self.m
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return self.m
 
 # Variable arithmetic expression
@@ -252,7 +252,7 @@ class VarAexp(Aexp):
     def __repr__(self):
         return 'VarAexp(%s)' % self.name
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         if self.name in env:
             return env[self.name]
             # Here I am returning only the value of variable and not its scope
@@ -268,7 +268,7 @@ class FuncAexp(Aexp):
     def __repr__(self):
         return 'FuncAexp(%s, %s)' % (self.name, str(self.params))
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         if self.name == "read_contract_output":
             self.params = check(self.params, env)
             return read_contract_output(self.params[0])
@@ -290,6 +290,9 @@ class FuncAexp(Aexp):
         elif self.name == "map_has":
             self.params = check(self.params, env)
             return self.params[1] in self.params[0].keys()
+        elif self.name == "update_contract_output":
+            self.params = check(self.params, env)
+            return update_contract_output(self.params[0])
         elif self.name in env:
             new_env = {}
             new_scope_map = {}
@@ -316,7 +319,7 @@ class FuncAexp(Aexp):
                         new_scope_map[scope] = []
                         new_scope_map[scope].append(name)
 
-            x = env[self.name].body.eval(new_env, new_scope_map, scope, read_contract_output, call_contract_function, send_amount)
+            x = env[self.name].body.eval(new_env, new_scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
             if x != None:
                 return x
 
@@ -331,7 +334,7 @@ class NullAexp(Aexp):
     def __repr__(self):
         return 'NullAexp(%s)' % self.n
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         return None
 
 # Indexing expression for any iterable
@@ -343,7 +346,7 @@ class IndexAexp(Aexp):
     def __repr__(self):
         return 'IndexAexp(%s, %s)' % (self.name, self.i)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
         if self.name in env:
             if type(env[self.name]) == str or type(env[self.name]) == list:
                 if self.i.isnumeric():
@@ -398,9 +401,9 @@ class BinopAexp(Aexp):
     def __repr__(self):
         return 'BinopAexp(%s, %s, %s)' % (self.op, self.left, self.right)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
+        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         if self.op == '+':
             value = left_value + right_value
         elif self.op == '-':
@@ -423,9 +426,9 @@ class RelopBexp(Bexp):
     def __repr__(self):
         return 'RelopBexp(%s, %s, %s)' % (self.op, self.left, self.right)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
+        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         if self.op == '<':
             value = left_value < right_value
         elif self.op == '<=':
@@ -451,9 +454,9 @@ class AndBexp(Bexp):
     def __repr__(self):
         return 'AndBexp(%s, %s)' % (self.left, self.right)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
+        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         return left_value and right_value
 
 # OR operation boolean expression
@@ -465,9 +468,9 @@ class OrBexp(Bexp):
     def __repr__(self):
         return 'OrBexp(%s, %s)' % (self.left, self.right)
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
-        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        left_value = self.left.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
+        right_value = self.right.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         return left_value or right_value
 
 # NOT operation boolean expression
@@ -478,6 +481,6 @@ class NotBexp(Bexp):
     def __repr__(self):
         return 'NotBexp(%s)' % self.exp
 
-    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount):
-        value = self.exp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount)
+    def eval(self, env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output):
+        value = self.exp.eval(env, scope_map, scope, read_contract_output, call_contract_function, send_amount, update_contract_output)
         return not value

@@ -4,13 +4,14 @@ from .rigidity.rigidity_parser import *
 import multiprocessing
 
 class VM:
-    def __init__(self, read_contract_output, call_contract_function, send_amount):
+    def __init__(self, read_contract_output, call_contract_function, send_amount, update_contract_output):
         self.read_contract_output = read_contract_output
         self.call_contract_function = call_contract_function
         self.send_amount = send_amount
+        self.update_contract_output = update_contract_output
 
-    def eval(self, ast, env, read_contract_output, call_contract_function, send_amount, return_dict):
-        ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount)   
+    def eval(self, ast, env, read_contract_output, call_contract_function, send_amount, update_contract_output, return_dict):
+        ast.eval(env, dict(), 0, read_contract_output, call_contract_function, send_amount, update_contract_output)
         return_dict[0] = str(env['contract_function_result'])
 
     def run_function(self, contract_code: str, function_name: str, params_list: List[Any]):
@@ -43,7 +44,7 @@ class VM:
         manager = multiprocessing.Manager()
         return_dict = manager.dict()
         try:
-            p = multiprocessing.Process(target=self.eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, return_dict))
+            p = multiprocessing.Process(target=self.eval, args=(ast, env, self.read_contract_output, self.call_contract_function, self.send_amount, self.update_contract_output, return_dict))
             p.start()
 
             # Wait for 3 seconds or until process finishes
