@@ -63,7 +63,10 @@ class AssignStatement(Statement):
                         key = int(key_name)
                         env[dict_name][key] = value
                     else:
-                        raise TypeError('key must be either integers, float or string')
+                        if key_name in env:
+                            env[dict_name][env[key_name]] = value
+                        else:
+                            raise TypeError('key must be either integers, float or string')
             else:
                 raise NameError('name ' + dict_name + ' is not defined in this scope')
         else:                             
@@ -380,7 +383,10 @@ class IndexAexp(Aexp):
                     if self.i.isnumeric():
                         self.i = int(self.i)
                     else:
-                        raise TypeError('Map keys must be either integers, float or string')
+                        if self.i in env:
+                            self.i = env[self.i]
+                        else:
+                            raise TypeError('Map keys must be either integers, float or string')
                 
                 if self.i in env[self.name].keys():
                     return env[self.name][self.i]

@@ -1,14 +1,30 @@
-function main() do
-  s := '{1: 1, \'test\': \'test\', 2.0: 2.0}';
-  m := string_to_map(s);
-  flag := '';
-  if map_has(m, 3) then
-    flag := 'True'
+function vote(candidate) do
+  // m := read_contract_output('self');
+  m := '{\'A\': 0, \'B\': 0}';
+  m := string_to_map(m);
+  // print(m);
+  if map_has(m, candidate) then
+    // print('Has');
+    // print(candidate);
+    // val := m['A'] + 1;
+    // m['A'] := val;
+    // print(m['A']);
+    // print(m);
+    m[candidate] := m[candidate] + 1;
+    // print(m['A']);
+    // temp := update_contract_output(m);
+    // print(temp);
+    return m
   else
-    flag := 'False'
-  end;
-  ans := update_contract_output(flag);
-  return ans
+    return m
+  end
+end;
+function main() do
+    m := {};
+    m['A'] := 0;
+    m['B'] := 0;
+    ans := vote('A');
+    return ans
 end;
 ans := main();
 return ans
